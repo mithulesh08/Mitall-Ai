@@ -1,0 +1,11 @@
+{
+  "name": "MITALL Personal Intelligence",
+  "description": "Advanced general-purpose personal AI assistant for programming, science, mathematics, history, creative writing, productivity, and knowledge management.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

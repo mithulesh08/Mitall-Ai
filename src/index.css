@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* Custom Scrollbar like ChatGPT and Gemini */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 9999px;
+  border: 2px solid rgba(15, 23, 42, 0.4);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.85);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.55) rgba(15, 23, 42, 0.4);
+}
+
+/* Always-visible chat scrollbar class for ChatGPT / Gemini style drawer and sidebar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #0f172a;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 6px;
+  border: 1px solid #1e293b;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6366f1;
+}
+
+/* Horizontal scrollbar for quick chats rail */
+.horizontal-scrollbar::-webkit-scrollbar {
+  height: 5px;
+}
+.horizontal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.horizontal-scrollbar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+.horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6366f1;
+}
+

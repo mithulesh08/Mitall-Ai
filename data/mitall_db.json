@@ -1,0 +1,452 @@
+{
+  "settings": {
+    "aiName": "MITALL",
+    "theme": "dark",
+    "language": "English",
+    "personality": "friendly_mentor",
+    "temperature": 0.7,
+    "maxTokens": 4096,
+    "activeProvider": "gemini",
+    "geminiModel": "gemini-3.8-flash",
+    "geminiApiKey": "",
+    "ollamaEndpoint": "http://127.0.0.1:11434",
+    "ollamaModel": "llama3.2",
+    "openaiEndpoint": "https://api.openai.com/v1",
+    "openaiModel": "gpt-4o",
+    "openaiApiKey": "",
+    "memoryEnabled": true,
+    "webSearchEnabled": true,
+    "voiceEnabled": true,
+    "speechSpeed": 1,
+    "voiceGender": "default",
+    "technicalExplanationLevel": "intermediate"
+  },
+  "conversations": [
+    {
+      "id": "conv-1794308937211-tlxky",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T11:08:57.211Z",
+      "updatedAt": "2026-11-10T11:08:57.211Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794308920087-6zahv",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T11:08:40.087Z",
+      "updatedAt": "2026-11-10T11:08:40.087Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794308823346-2qfhh",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T11:07:03.346Z",
+      "updatedAt": "2026-11-10T11:07:03.347Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794308809001-4y7fe",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T11:06:49.001Z",
+      "updatedAt": "2026-11-10T11:06:49.001Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794308780414-tc568",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T11:06:20.414Z",
+      "updatedAt": "2026-11-10T11:06:20.414Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794231855316-s4mfr",
+      "title": "New Conversation",
+      "createdAt": "2026-11-09T13:44:15.316Z",
+      "updatedAt": "2026-11-09T13:44:15.317Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-welcome",
+      "title": "Welcome to MITALL Personal Intelligence",
+      "createdAt": "2026-11-09T05:43:51.521Z",
+      "updatedAt": "2026-11-09T05:43:51.521Z",
+      "isArchived": false,
+      "pinned": true,
+      "messagesCount": 2,
+      "lastMessagePreview": "Hello! I am MITALL, your general-purpose personal AI assistant."
+    },
+    {
+      "id": "conv-python-largest",
+      "title": "Find Largest of 3 in Python",
+      "createdAt": "2026-11-09T13:13:51.521Z",
+      "updatedAt": "2026-11-09T13:28:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "Here is a clean, robust Python program to find the largest among three numbers..."
+    },
+    {
+      "id": "conv-ai-explain",
+      "title": "Explain Artificial Intelligence",
+      "createdAt": "2026-11-09T11:43:51.521Z",
+      "updatedAt": "2026-11-09T11:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "Artificial Intelligence (AI) refers to computer systems designed to perform cognitive tasks..."
+    },
+    {
+      "id": "conv-solar-system",
+      "title": "The Solar System & Planetary Orbits",
+      "createdAt": "2026-11-08T09:43:51.521Z",
+      "updatedAt": "2026-11-08T11:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "Our solar system consists of the Sun, eight planets, dwarf planets, and millions of asteroids..."
+    },
+    {
+      "id": "conv-robot-story",
+      "title": "Creative Story: Sentient Robot in 2350",
+      "createdAt": "2026-11-08T03:43:51.521Z",
+      "updatedAt": "2026-11-08T05:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "Unit 734 had spent two centuries archiving data before discovering the subterranean vault..."
+    },
+    {
+      "id": "conv-quantum-computing",
+      "title": "Quantum Computing: Qubits & Superposition",
+      "createdAt": "2026-11-06T13:43:51.521Z",
+      "updatedAt": "2026-11-06T13:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "Classical computers use bits (0 or 1), while quantum computers use qubits leveraging superposition..."
+    },
+    {
+      "id": "conv-wwii-timeline",
+      "title": "World War II Key Events & Timeline",
+      "createdAt": "2026-11-04T13:43:51.521Z",
+      "updatedAt": "2026-11-04T13:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "World War II (1939-1945) was a global conflict that involved over 30 countries..."
+    },
+    {
+      "id": "conv-python-factorial",
+      "title": "Python Factorial (Iterative vs Recursive)",
+      "createdAt": "2026-11-03T13:43:51.521Z",
+      "updatedAt": "2026-11-03T13:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "Here is how to calculate the factorial of a number in Python using both paradigms..."
+    },
+    {
+      "id": "conv-cybersecurity",
+      "title": "Cybersecurity Learning Path & Advice",
+      "createdAt": "2026-10-26T13:43:51.521Z",
+      "updatedAt": "2026-10-26T13:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "A structured roadmap for breaking into cybersecurity: networking foundations, Linux, and CTFs..."
+    },
+    {
+      "id": "conv-cloud-vs-networking",
+      "title": "Cloud Computing vs Networking",
+      "createdAt": "2026-10-22T13:43:51.521Z",
+      "updatedAt": "2026-10-22T13:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "While networking provides the interconnection infrastructure, cloud computing provides compute on demand..."
+    },
+    {
+      "id": "conv-calculus-derivatives",
+      "title": "Calculus: Intuitive Derivatives",
+      "createdAt": "2026-09-30T13:43:51.521Z",
+      "updatedAt": "2026-09-30T13:43:51.521Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 2,
+      "lastMessagePreview": "A derivative represents the instantaneous rate of change of a function with respect to its variable..."
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-w1",
+      "conversationId": "conv-welcome",
+      "role": "user",
+      "content": "Who are you and what can you help me with?",
+      "createdAt": "2026-11-09T05:42:51.521Z"
+    },
+    {
+      "id": "msg-w2",
+      "conversationId": "conv-welcome",
+      "role": "assistant",
+      "content": "Hello! I am **MITALL**, your general-purpose personal AI assistant.\n\nI can help you explore and answer questions across virtually any topic, including:\n- 🔬 **Science & Math**: Physics, astronomy, biology, chemistry, calculus, and statistics.\n- 🌍 **History, Geography & Culture**: World events, historical civilizations, and global knowledge.\n- 💡 **Philosophy & Learning**: Deep concepts explained in simple language or technical depth.\n- ✍️ **Creative Writing & Ideas**: Stories, essays, brainstorming, and translation.\n- 💻 **Software Engineering & Technology**: Full-stack development, algorithms, system design, and debugging.\n- ⚡ **Personal Productivity**: Managing tasks, in-app reminders, personal memories, and document research.\n\nWhat would you like to explore or discuss right now?",
+      "createdAt": "2026-11-09T05:43:51.521Z",
+      "modelUsed": "gemini-3.8-flash"
+    },
+    {
+      "id": "msg-p1",
+      "conversationId": "conv-python-largest",
+      "role": "user",
+      "content": "give an python code for finding largest of 3",
+      "createdAt": "2026-11-09T13:13:51.521Z"
+    },
+    {
+      "id": "msg-p2",
+      "conversationId": "conv-python-largest",
+      "role": "assistant",
+      "content": "Here are the best, standard ways to find the largest of three numbers in **Python**:\n\n---\n\n### Method 1: Using the Built-in `max()` Function (Recommended)\nPython provides a built-in `max()` function that is fast, highly readable, and runs in $\\mathcal{O}(1)$ time:\n\n```python\ndef find_largest_builtin(a: float, b: float, c: float) -> float:\n    \"\"\"Returns the largest among three numbers using max().\"\"\"\n    return max(a, b, c)\n\n# Example Usage:\nnum1 = 45\nnum2 = 89\nnum3 = 12\n\nresult = find_largest_builtin(num1, num2, num3)\nprint(f\"The largest number among {num1}, {num2}, and {num3} is: {result}\")\n```\n\n---\n\n### Method 2: Using Conditional Logic (`if-elif-else`)\n```python\ndef find_largest_conditional(a: float, b: float, c: float) -> float:\n    \"\"\"Finds the largest of three numbers using comparison operators.\"\"\"\n    if a >= b and a >= c:\n        return a\n    elif b >= a and b >= c:\n        return b\n    else:\n        return c\n\nx, y, z = 100, 250, 175\nprint(\"Largest is:\", find_largest_conditional(x, y, z))\n```\n\n> 💡 **Tip:** Click **\"Run Sandbox\"** above any code block to execute it directly inside MITALL!",
+      "createdAt": "2026-11-09T13:28:51.521Z",
+      "modelUsed": "gemini-3.8-flash"
+    },
+    {
+      "id": "msg-ai1",
+      "conversationId": "conv-ai-explain",
+      "role": "user",
+      "content": "What is artificial intelligence?",
+      "createdAt": "2026-11-09T11:42:51.521Z"
+    },
+    {
+      "id": "msg-ai2",
+      "conversationId": "conv-ai-explain",
+      "role": "assistant",
+      "content": "Artificial Intelligence (AI) is the branch of computer science dedicated to creating software systems capable of performing tasks that typically require human cognition.\n\n### Core Pillars of Modern AI:\n1. **Machine Learning (ML)**: Algorithms that learn statistical representations and patterns from historical training data rather than relying exclusively on hand-crafted rules.\n2. **Deep Learning & Neural Networks**: Multi-layered artificial neural network architectures (such as Transformers and Convolutions) capable of modeling non-linear, hierarchical relationships in text, vision, and audio.\n3. **Generative AI & LLMs**: Models trained on broad web-scale datasets to synthesize novel code, literature, multimodal analysis, and structured logic.\n4. **Computer Vision & Robotics**: Real-time sensory perception, object segmentation, and physical spatial navigation.",
+      "createdAt": "2026-11-09T11:43:51.521Z",
+      "modelUsed": "gemini-3.8-flash"
+    },
+    {
+      "conversationId": "conv-test-live",
+      "role": "user",
+      "content": "what is the capital of japan",
+      "id": "msg-1794231855317-19abl",
+      "createdAt": "2026-11-09T13:44:15.317Z"
+    },
+    {
+      "conversationId": "conv-test-live",
+      "role": "assistant",
+      "content": "The capital of Japan is Tokyo.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794231856420-tuz4j",
+      "createdAt": "2026-11-09T13:44:16.420Z"
+    },
+    {
+      "conversationId": "conv-test-mid",
+      "role": "user",
+      "content": "give an code to find an middle element using linked list",
+      "id": "msg-1794308780415-r3436",
+      "createdAt": "2026-11-10T11:06:20.415Z"
+    },
+    {
+      "conversationId": "conv-test-mid",
+      "role": "assistant",
+      "content": "To find the middle element of a linked list efficiently, the standard approach is the **\"Tortoise and Hare\" (Slow and Fast pointer) algorithm**.\n\nThis algorithm traverses the list using two pointers: one moves one step at a time (slow), and the other moves two steps at a time (fast). When the fast pointer reaches the end, the slow pointer will be at the middle. This approach has a time complexity of **O(n)** and space complexity of **O(1)**.\n\nHere is the implementation in TypeScript:\n\n```typescript\n/**\n * Definition for a singly-linked list node.\n */\nclass ListNode<T> {\n  value: T;\n  next: ListNode<T> | null;\n\n  constructor(value: T, next: ListNode<T> | null = null) {\n    this.value = value;\n    this.next = next;\n  }\n}\n\n/**\n * Finds the middle element of a linked list.\n * If there are two middle nodes, it returns the second middle node.\n */\nfunction findMiddle<T>(head: ListNode<T> | null): ListNode<T> | null {\n  if (!head) return null;\n\n  let slow: ListNode<T> | null = head;\n  let fast: ListNode<T> | null = head;\n\n  // Move fast by two and slow by one until fast reaches the end\n  while (fast !== null && fast.next !== null) {\n    slow = slow!.next;\n    fast = fast.next.next;\n  }\n\n  return slow;\n}\n\n// --- Example Usage ---\n\n// Create a list: 1 -> 2 -> 3 -> 4 -> 5\nconst node5 = new ListNode(5);\nconst node4 = new ListNode(4, node5);\nconst node3 = new ListNode(3, node4);\nconst node2 = new ListNode(2, node3);\nconst head = new ListNode(1, node2);\n\nconst middle = findMiddle(head);\nconsole.log(`The middle node value is: ${middle?.value}`); // Output: 3\n```\n\n### Key Considerations:\n1.  **TypeScript Generics:** I used `<T>` to make the `ListNode` class reusable for any data type.\n2.  **Safety:** The `!` (non-null assertion operator) is used on `slow` inside the loop because the logic ensures `slow` will not be null when `fast` is valid.\n3.  **Even-numbered lists:** With this implementation, for a list like `1 -> 2 -> 3 -> 4`, the `fast` pointer will eventually become `null` while `slow` is at `3`. Thus, it returns the **second** middle node. If you need the first middle node in an even-length list, you would adjust the loop condition slightly.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794308792163-s0len",
+      "createdAt": "2026-11-10T11:06:32.163Z"
+    },
+    {
+      "conversationId": "conv-test-rev",
+      "role": "user",
+      "content": "how to reverse a string in python",
+      "id": "msg-1794308809002-skhsx",
+      "createdAt": "2026-11-10T11:06:49.002Z"
+    },
+    {
+      "conversationId": "conv-test-rev2",
+      "role": "user",
+      "content": "how to reverse a string in python",
+      "id": "msg-1794308823347-kzfjh",
+      "createdAt": "2026-11-10T11:07:03.347Z"
+    },
+    {
+      "conversationId": "conv-test-rev",
+      "role": "assistant",
+      "content": "The most common and efficient way to reverse a string in Python is by using **slicing**.\n\n### The Slicing Method\nIn Python, strings can be sliced using the syntax `[start:stop:step]`. By providing `-1` for the step, you tell Python to traverse the string backwards.\n\n```python\nmy_string = \"hello\"\nreversed_string = my_string[::-1]\n\nprint(reversed_string)  # Output: \"olleh\"\n```\n\n---\n\n### Alternative Methods\n\nWhile slicing is the standard \"Pythonic\" way to do it, here are two other common approaches:\n\n#### 1. Using `reversed()` and `join()`\nThe `reversed()` function returns an iterator that accesses the string in reverse order. You can then use `.join()` to turn that iterator back into a string.\n\n```python\nmy_string = \"hello\"\nreversed_string = \"\".join(reversed(my_string))\n\nprint(reversed_string)  # Output: \"olleh\"\n```\n\n#### 2. Using a Loop\nIf you are doing this for learning algorithms, you can build a new string by iterating through the original:\n\n```python\nmy_string = \"hello\"\nreversed_string = \"\"\n\nfor char in my_string:\n    reversed_string = char + reversed_string\n\nprint(reversed_string)  # Output: \"olleh\"\n```\n\n**Recommendation:** Stick with the **slicing method (`[::-1]`)** because it is the fastest and most concise way to perform this operation in Python.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794308832484-fgm7e",
+      "createdAt": "2026-11-10T11:07:12.484Z"
+    },
+    {
+      "conversationId": "conv-test-rev2",
+      "role": "assistant",
+      "content": "The most idiomatic and efficient way to reverse a string in Python is by using **slicing**.\n\n### 1. Using Slicing (Recommended)\nPython strings support a slicing operation that allows you to specify a start, stop, and step. By using a step of `-1`, you tell Python to traverse the string backwards.\n\n```python\ntext = \"hello\"\nreversed_text = text[::-1]\nprint(reversed_text)  # Output: olleh\n```\n\n### 2. Using `reversed()` and `join()`\nIf you prefer a more explicit functional approach, you can use the built-in `reversed()` function, which returns an iterator, and join it back into a string.\n\n```python\ntext = \"hello\"\nreversed_text = \"\".join(reversed(text))\nprint(reversed_text)  # Output: olleh\n```\n\n### Which one should you use?\n*   **Slicing (`[::-1]`)** is the standard, most \"Pythonic\" way. It is faster and requires less code.\n*   **`reversed()`** is useful if you are working with very large data structures where you might want to iterate over the characters without creating a new string immediately, or if you prefer the readability of the function name.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794308847244-slybr",
+      "createdAt": "2026-11-10T11:07:27.244Z"
+    },
+    {
+      "conversationId": "conv-test-user-exact",
+      "role": "user",
+      "content": "give an code to find an middle element using linked list",
+      "id": "msg-1794308920088-oinrh",
+      "createdAt": "2026-11-10T11:08:40.088Z"
+    },
+    {
+      "conversationId": "conv-test-user-exact",
+      "role": "user",
+      "content": "give an code to find an middle element using linked list",
+      "id": "msg-1794308937211-f7l58",
+      "createdAt": "2026-11-10T11:08:57.211Z"
+    },
+    {
+      "conversationId": "conv-test-user-exact",
+      "role": "assistant",
+      "content": "To find the middle element of a linked list efficiently, the standard approach is the **\"Tortoise and Hare\" (slow and fast pointers)** algorithm.\n\n### The Algorithm\n1.  Initialize two pointers, `slow` and `fast`, both pointing to the head of the list.\n2.  Traverse the list: move `slow` by one step and `fast` by two steps in each iteration.\n3.  When `fast` reaches the end (or `null`), the `slow` pointer will be exactly at the middle.\n\n### TypeScript Implementation\n\n```typescript\nclass ListNode<T> {\n  value: T;\n  next: ListNode<T> | null;\n\n  constructor(value: T, next: ListNode<T> | null = null) {\n    this.value = value;\n    this.next = next;\n  }\n}\n\n/**\n * Finds the middle element of a linked list.\n * Time Complexity: O(n)\n * Space Complexity: O(1)\n */\nfunction findMiddle<T>(head: ListNode<T> | null): ListNode<T> | null {\n  if (!head) return null;\n\n  let slow: ListNode<T> | null = head;\n  let fast: ListNode<T> | null = head;\n\n  // Move fast by 2, slow by 1\n  while (fast !== null && fast.next !== null) {\n    slow = slow!.next;\n    fast = fast.next.next;\n  }\n\n  return slow;\n}\n\n// --- Example Usage ---\nconst list = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5)))));\nconst middleNode = findMiddle(list);\n\nconsole.log(`The middle element is: ${middleNode?.value}`); // Output: 3\n```\n\n### Key Considerations:\n*   **Efficiency:** This algorithm runs in **O(n)** time because we traverse the list only once. It uses **O(1)** extra space as we only store two pointer references.\n*   **Even-numbered lists:** In a list like `[1, 2, 3, 4]`, this implementation will return `3` (the second of the two middle elements). If you need the first middle element for even lists, you would add a slight adjustment to the `while` condition or keep track of the previous node.\n*   **Generics:** I have used TypeScript generics (`<T>`) to ensure the linked list can store any data type while maintaining type safety.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794308945805-qn946",
+      "createdAt": "2026-11-10T11:09:05.805Z"
+    },
+    {
+      "conversationId": "conv-test-user-exact",
+      "role": "assistant",
+      "content": "To find the middle element of a linked list efficiently, the standard approach is the **\"Tortoise and Hare\" (Two-Pointer)** algorithm. \n\nIn this approach, you use two pointers: a `slow` pointer that moves one step at a time, and a `fast` pointer that moves two steps at a time. When the `fast` pointer reaches the end of the list, the `slow` pointer will be at the middle.\n\nHere is the implementation in **TypeScript**:\n\n```typescript\n/**\n * Definition for a singly-linked list node.\n */\nclass ListNode<T> {\n  val: T;\n  next: ListNode<T> | null;\n\n  constructor(val: T, next: ListNode<T> | null = null) {\n    this.val = val;\n    this.next = next;\n  }\n}\n\n/**\n * Finds the middle node of a linked list.\n * Time Complexity: O(n)\n * Space Complexity: O(1)\n */\nfunction findMiddle<T>(head: ListNode<T> | null): ListNode<T> | null {\n  if (!head) return null;\n\n  let slow: ListNode<T> | null = head;\n  let fast: ListNode<T> | null = head;\n\n  // Move fast by 2 and slow by 1. \n  // When fast reaches the end, slow is at the middle.\n  while (fast !== null && fast.next !== null) {\n    slow = slow!.next;\n    fast = fast.next.next;\n  }\n\n  return slow;\n}\n\n// --- Example Usage ---\nconst node3 = new ListNode(3, null);\nconst node2 = new ListNode(2, node3);\nconst head = new ListNode(1, node2);\n\nconst middle = findMiddle(head);\nconsole.log(middle?.val); // Output: 2\n```\n\n### Key Considerations:\n1.  **Efficiency:** This approach requires only a single pass through the list ($O(n)$ time complexity) and uses constant extra space ($O(1)$ space complexity).\n2.  **Even vs. Odd:** \n    *   If the list has an **odd** number of nodes (e.g., 1→2→3), the `slow` pointer lands exactly on the middle element (2).\n    *   If the list has an **even** number of nodes (e.g., 1→2→3→4), this implementation returns the second of the two middle elements (3). If you need the first middle element in an even-length list, you would simply adjust the `while` loop condition.\n3.  **Type Safety:** Using TypeScript generics (`<T>`) allows this function to work with linked lists of any data type (numbers, strings, objects, etc.) while maintaining strict type checking.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794308959295-kw06h",
+      "createdAt": "2026-11-10T11:09:19.295Z"
+    }
+  ],
+  "memories": [
+    {
+      "id": "mem-1",
+      "content": "User prefers clean, modular code with strong TypeScript types and clear explanations.",
+      "category": "preferences",
+      "isActive": true,
+      "createdAt": "2026-11-09T12:00:27.197Z",
+      "updatedAt": "2026-11-09T12:00:27.197Z"
+    },
+    {
+      "id": "mem-2",
+      "content": "Primary goal is mastering full-stack AI orchestration, algorithms, and high-performance systems.",
+      "category": "learning_goals",
+      "isActive": true,
+      "createdAt": "2026-11-09T12:00:27.197Z",
+      "updatedAt": "2026-11-09T12:00:27.197Z"
+    },
+    {
+      "id": "mem-3",
+      "content": "Current project: MITALL Personal Intelligence Assistant with multi-provider AI support.",
+      "category": "project_info",
+      "isActive": true,
+      "createdAt": "2026-11-09T12:00:27.197Z",
+      "updatedAt": "2026-11-09T12:00:27.197Z"
+    }
+  ],
+  "documents": [],
+  "documentChunks": [],
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Explore MITALL Knowledge Base upload",
+      "description": "Upload a PDF or markdown document to test semantic RAG search.",
+      "category": "research",
+      "priority": "high",
+      "dueDate": "2026-11-10",
+      "completed": false,
+      "createdAt": "2026-11-09T12:00:27.197Z"
+    },
+    {
+      "id": "task-2",
+      "title": "Test Coding Assistant & Safe Sandbox",
+      "description": "Run Python/JavaScript algorithms and inspect complexity breakdown.",
+      "category": "coding",
+      "priority": "medium",
+      "dueDate": "2026-11-11",
+      "completed": false,
+      "createdAt": "2026-11-09T12:00:27.197Z"
+    },
+    {
+      "id": "task-3",
+      "title": "Configure AI Provider settings",
+      "description": "Verify Gemini 3.8 Flash, or connect local Ollama if installed.",
+      "category": "work",
+      "priority": "low",
+      "completed": true,
+      "completedAt": "2026-11-09T12:00:27.197Z",
+      "createdAt": "2026-11-09T12:00:27.197Z"
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-1",
+      "title": "MITALL Architecture Notes",
+      "content": "# MITALL Personal Intelligence Architecture\n\nMITALL operates through a modular AI orchestration pipeline:\n1. **Frontend**: React + TypeScript + Tailwind CSS with dark/light themes.\n2. **Backend**: Express + Vite dev server full-stack with REST & SSE endpoints.\n3. **AI Engine**: Multi-provider support (Gemini 3.8 Flash, Ollama, OpenAI-compatible).\n4. **Memory**: Two-tier memory (Short-term conversation context + Persistent long-term user memories).\n5. **RAG Knowledge Base**: Document chunking and TF-IDF / vector similarity retrieval.\n6. **Tool Suite**: Calculator, Web Search, Code Analysis, Task & Note managers.",
+      "tags": [
+        "Architecture",
+        "MITALL",
+        "AI"
+      ],
+      "pinned": true,
+      "createdAt": "2026-11-09T12:00:27.197Z",
+      "updatedAt": "2026-11-09T12:00:27.197Z"
+    }
+  ],
+  "toolLogs": [
+    {
+      "tool": "calculator",
+      "input": {
+        "expression": "25 * 48"
+      },
+      "output": {
+        "expression": "25 * 48",
+        "result": 1200,
+        "formatted": "25 * 48 = 1200"
+      },
+      "status": "success",
+      "timestamp": "2026-11-09T12:35:15.713Z",
+      "id": "tool-1794227715714-ohi9u"
+    },
+    {
+      "tool": "calculator",
+      "input": {
+        "expression": "25 * 48"
+      },
+      "output": {
+        "expression": "25 * 48",
+        "result": 1200,
+        "formatted": "25 * 48 = 1200"
+      },
+      "status": "success",
+      "timestamp": "2026-11-09T12:34:20.461Z",
+      "id": "tool-1794227660462-ph1le"
+    },
+    {
+      "tool": "calculator",
+      "input": {
+        "expression": "2 * (15 + 4)"
+      },
+      "output": {
+        "expression": "2 * (15 + 4)",
+        "result": 38,
+        "formatted": "2 * (15 + 4) = 38"
+      },
+      "status": "success",
+      "timestamp": "2026-11-09T12:00:41.580Z",
+      "id": "tool-1794225641581-0os5l"
+    }
+  ]
+}

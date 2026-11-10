@@ -38,6 +38,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const handleSave = async (e?: React.FormEvent) => {
     e?.preventDefault();
     setIsSaving(true);
+    if (formData.geminiApiKey) {
+      localStorage.setItem('mitall_gemini_api_key', formData.geminiApiKey);
+    }
     const updated = await api.updateSettings(formData);
     onUpdateSettings(updated);
     setIsSaving(false);

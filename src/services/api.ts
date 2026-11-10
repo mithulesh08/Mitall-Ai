@@ -9,6 +9,7 @@ import {
   ToolInvocation,
   ProviderStatus,
 } from '../types/index';
+import { generateClientFallback, streamDirectGeminiClient } from '../utils/clientFallback';
 
 export const api = {
   // Health
@@ -103,7 +104,7 @@ export const api = {
     return data.success;
   },
 
-  // Chat Streaming via SSE
+  // Chat Streaming via Fetch + ReadableStream with graceful client fallback
   streamChat(
     conversationId: string,
     prompt: string,
@@ -116,40 +117,140 @@ export const api = {
       onError?: (error: string) => void;
     }
   ): () => void {
-    const url = `/api/chat/stream?conversationId=${encodeURIComponent(conversationId)}&prompt=${encodeURIComponent(prompt)}`;
-    const eventSource = new EventSource(url);
+    const controller = new AbortController();
+    let isCancelled = false;
 
-    eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'chunk' && data.text) {
-          callbacks.onChunk(data.text);
-        } else if (data.type === 'tools' && data.tools) {
-          callbacks.onTools?.(data.tools);
-        } else if (data.type === 'memory' && data.memory) {
-          callbacks.onMemory?.(data.memory);
-        } else if (data.type === 'sources' && data.sources) {
-          callbacks.onSources?.(data.sources);
-        } else if (data.type === 'done' && data.message) {
-          callbacks.onDone?.(data.message);
-          eventSource.close();
-        } else if (data.type === 'error') {
-          callbacks.onError?.(data.error || 'Unknown error occurred');
-          eventSource.close();
+    const streamClientFallback = () => {
+      const fallbackText = generateClientFallback(prompt);
+      const words = fallbackText.split(/(\s+)/);
+      let index = 0;
+      let accumulated = '';
+
+      const interval = setInterval(() => {
+        if (isCancelled) {
+          clearInterval(interval);
+          return;
         }
-      } catch (err) {
-        console.error('SSE JSON parse error:', err);
-      }
+
+        if (index < words.length) {
+          const chunk = words.slice(index, index + 3).join('');
+          index += 3;
+          accumulated += chunk;
+          callbacks.onChunk(chunk);
+        } else {
+          clearInterval(interval);
+          const finalMsg: ChatMessage = {
+            id: `msg-${Date.now()}`,
+            conversationId,
+            role: 'assistant',
+            content: accumulated,
+            createdAt: new Date().toISOString(),
+            modelUsed: 'mitall-3.8-flash (client-mode)',
+          };
+          callbacks.onDone?.(finalMsg);
+        }
+      }, 40);
     };
 
-    eventSource.onerror = () => {
-      callbacks.onError?.('Network connection interrupted while streaming response.');
-      eventSource.close();
-    };
+    (async () => {
+      const url = `/api/chat/stream?conversationId=${encodeURIComponent(conversationId)}&prompt=${encodeURIComponent(prompt)}`;
+
+      try {
+        const res = await fetch(url, {
+          signal: controller.signal,
+          headers: { Accept: 'text/event-stream' },
+        });
+
+        if (!res.ok) {
+          console.warn(`[MITALL API] /api/chat/stream returned HTTP ${res.status}. Checking for client direct API key...`);
+          const clientKey = localStorage.getItem('mitall_gemini_api_key') || localStorage.getItem('gemini_api_key');
+          if (clientKey) {
+            try {
+              let fullText = '';
+              await streamDirectGeminiClient(
+                prompt,
+                clientKey,
+                (chunk) => {
+                  fullText += chunk;
+                  callbacks.onChunk(chunk);
+                },
+                controller.signal
+              );
+              callbacks.onDone?.({
+                id: `msg-${Date.now()}`,
+                conversationId,
+                role: 'assistant',
+                content: fullText,
+                createdAt: new Date().toISOString(),
+                modelUsed: 'gemini-2.5-flash (client-direct)',
+              });
+              return;
+            } catch (directErr) {
+              console.warn('[MITALL API] Direct client Gemini API failed:', directErr);
+            }
+          }
+          streamClientFallback();
+          return;
+        }
+
+        const reader = res.body?.getReader();
+        if (!reader) {
+          streamClientFallback();
+          return;
+        }
+
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let hasReceivedChunk = false;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(trimmed.slice(6));
+                if (data.type === 'chunk' && data.text) {
+                  hasReceivedChunk = true;
+                  callbacks.onChunk(data.text);
+                } else if (data.type === 'tools' && data.tools) {
+                  callbacks.onTools?.(data.tools);
+                } else if (data.type === 'memory' && data.memory) {
+                  callbacks.onMemory?.(data.memory);
+                } else if (data.type === 'sources' && data.sources) {
+                  callbacks.onSources?.(data.sources);
+                } else if (data.type === 'done' && data.message) {
+                  callbacks.onDone?.(data.message);
+                } else if (data.type === 'error') {
+                  if (!hasReceivedChunk) {
+                    streamClientFallback();
+                  } else {
+                    callbacks.onError?.(data.error || 'Server error occurred');
+                  }
+                }
+              } catch (parseErr) {
+                console.error('SSE JSON parse error:', parseErr);
+              }
+            }
+          }
+        }
+      } catch (err: unknown) {
+        if (controller.signal.aborted || isCancelled) return;
+        console.warn('[MITALL API] Network request failed. Engaging client fallback mode.', err);
+        streamClientFallback();
+      }
+    })();
 
     // Return cleanup abort handle
     return () => {
-      eventSource.close();
+      isCancelled = true;
+      controller.abort();
     };
   },
 

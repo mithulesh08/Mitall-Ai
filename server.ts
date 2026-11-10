@@ -354,9 +354,16 @@ async function startServer() {
   const server = http.createServer(app);
   setupLiveAgentWebSocket(server);
 
-  server.listen(PORT, '0.0.0.0', () => {
-    console.log(`[MITALL Server & Live Agent] Running on http://localhost:${PORT}`);
-  });
+  if (!process.env.VERCEL) {
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`[MITALL Server & Live Agent] Running on http://localhost:${PORT}`);
+    });
+  }
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
+export { app };

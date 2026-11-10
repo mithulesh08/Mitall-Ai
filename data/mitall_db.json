@@ -23,6 +23,46 @@
   },
   "conversations": [
     {
+      "id": "conv-1794312678432-eppi0",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T12:11:18.432Z",
+      "updatedAt": "2026-11-10T12:11:18.432Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794312531554-j0l8x",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T12:08:51.554Z",
+      "updatedAt": "2026-11-10T12:08:51.554Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794312493993-71ib5",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T12:08:13.993Z",
+      "updatedAt": "2026-11-10T12:08:13.993Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794312485729-fj7s1",
+      "title": "New Conversation",
+      "createdAt": "2026-11-10T12:08:05.729Z",
+      "updatedAt": "2026-11-10T12:08:05.729Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
       "id": "conv-1794308937211-tlxky",
       "title": "New Conversation",
       "createdAt": "2026-11-10T11:08:57.211Z",
@@ -328,6 +368,66 @@
       "modelUsed": "gemini-3.8-flash",
       "id": "msg-1794308959295-kw06h",
       "createdAt": "2026-11-10T11:09:19.295Z"
+    },
+    {
+      "conversationId": "test-conv",
+      "role": "user",
+      "content": "hi",
+      "id": "msg-1794312485730-civup",
+      "createdAt": "2026-11-10T12:08:05.730Z"
+    },
+    {
+      "conversationId": "test-conv",
+      "role": "user",
+      "content": "hi",
+      "id": "msg-1794312493993-acg1u",
+      "createdAt": "2026-11-10T12:08:13.993Z"
+    },
+    {
+      "conversationId": "test-conv",
+      "role": "assistant",
+      "content": "Hello! How are you doing today? Is there anything I can help you with?",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794312505082-ts55p",
+      "createdAt": "2026-11-10T12:08:25.082Z"
+    },
+    {
+      "conversationId": "test-conv",
+      "role": "assistant",
+      "content": "Hello! How can I help you today?",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794312512438-2vbeq",
+      "createdAt": "2026-11-10T12:08:32.438Z"
+    },
+    {
+      "conversationId": "conv-1794312297616-5dxo8",
+      "role": "user",
+      "content": "hi",
+      "id": "msg-1794312531555-k0gjj",
+      "createdAt": "2026-11-10T12:08:51.555Z"
+    },
+    {
+      "conversationId": "conv-1794312297616-5dxo8",
+      "role": "assistant",
+      "content": "Hello! How can I help you today?",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794312549435-7klh3",
+      "createdAt": "2026-11-10T12:09:09.435Z"
+    },
+    {
+      "conversationId": "test-conv-2",
+      "role": "user",
+      "content": "hi",
+      "id": "msg-1794312678433-w0ldj",
+      "createdAt": "2026-11-10T12:11:18.433Z"
+    },
+    {
+      "conversationId": "test-conv-2",
+      "role": "assistant",
+      "content": "Hello! How are you doing today? Is there anything I can help you with?",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794312680048-86ea9",
+      "createdAt": "2026-11-10T12:11:20.048Z"
     }
   ],
   "memories": [

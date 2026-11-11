@@ -8,6 +8,108 @@ export function generateSynthesizedResponse(prompt: string, systemPrompt: string
   const p = prompt.trim();
   const lower = p.toLowerCase();
 
+  // 0. FIBONACCI SEQUENCE & DYNAMIC PROGRAMMING
+  if (lower.includes('fibonacci') || lower.includes('fibonaci') || lower.includes('fib serie') || lower.includes('fibonacci series')) {
+    return `### Fibonacci Series Implementation
+
+The **Fibonacci sequence** is a sequence where each number is the sum of the two preceding ones:
+$$\\mathcal{F}(0) = 0, \\quad \\mathcal{F}(1) = 1, \\quad \\mathcal{F}(n) = \\mathcal{F}(n-1) + \\mathcal{F}(n-2) \\quad \\text{for } n \\ge 2$$
+
+Sequence: \`0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...\`
+
+---
+
+### 1. Python Implementation (Iterative & Dynamic Programming)
+
+The iterative approach is the most efficient practical method, running in **$\\mathcal{O}(n)$ time** with **$\\mathcal{O}(1)$ auxiliary space**.
+
+\`\`\`python
+from typing import List
+
+def fibonacci_series(n: int) -> List[int]:
+    """
+    Generates the first n numbers of the Fibonacci series.
+    
+    Time Complexity: O(n)
+    Space Complexity: O(n) to store the result list
+    """
+    if n <= 0:
+        return []
+    if n == 1:
+        return [0]
+    
+    series = [0, 1]
+    while len(series) < n:
+        series.append(series[-1] + series[-2])
+    return series
+
+def fibonacci_nth(n: int) -> int:
+    """
+    Calculates the n-th Fibonacci number in O(1) auxiliary space.
+    """
+    if n < 0:
+        raise ValueError("n must be non-negative")
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    
+    prev, curr = 0, 1
+    for _ in range(2, n + 1):
+        prev, curr = curr, prev + curr
+    return curr
+
+# --- Verification & Test Runner ---
+if __name__ == "__main__":
+    count = 10
+    fib_list = fibonacci_series(count)
+    print(f"First {count} Fibonacci numbers:")
+    print(" -> ".join(map(str, fib_list)))
+    
+    n = 15
+    print(f"\\nThe {n}-th Fibonacci number is: {fibonacci_nth(n)}")
+\`\`\`
+
+---
+
+### 2. TypeScript / JavaScript Implementation
+
+\`\`\`typescript
+/**
+ * Generates the first n numbers in the Fibonacci sequence.
+ */
+function getFibonacciSeries(n: number): number[] {
+  if (n <= 0) return [];
+  if (n === 1) return [0];
+
+  const series: number[] = [0, 1];
+  for (let i = 2; i < n; i++) {
+    series.push(series[i - 1] + series[i - 2]);
+  }
+  return series;
+}
+
+// Example usage:
+const terms = 12;
+const result = getFibonacciSeries(terms);
+console.log(\`First \${terms} Fibonacci numbers:\`, result);
+// Output: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+\`\`\`
+
+---
+
+### Complexity Analysis
+
+| Approach | Time Complexity | Space Complexity | Description |
+| :--- | :--- | :--- | :--- |
+| **Iterative / Two Variables** | $\\mathcal{O}(n)$ | $\\mathcal{O}(1)$ | **Recommended.** Constant auxiliary memory. |
+| **Memoization (Top-Down)** | $\\mathcal{O}(n)$ | $\\mathcal{O}(n)$ | Recursive with hash table / cache. |
+| **Naive Recursion** | $\\mathcal{O}(2^n)$ | $\\mathcal{O}(n)$ | Exponential; recalculates subproblems repeatedly. |
+| **Matrix Exponentiation** | $\\mathcal{O}(\\log n)$ | $\\mathcal{O}(1)$ | Uses $\\begin{pmatrix}1 & 1 \\\\ 1 & 0\\end{pmatrix}^n$ for extremely large $n$. |
+
+> 💡 **Tip:** You can click **"Run Sandbox"** in MITALL's Coding Studio to execute and test this code directly!`;
+  }
+
   // 1. DATA STRUCTURES & ALGORITHMS (LINKED LISTS)
   if (lower.includes('linked list') || lower.includes('linkedlist') || lower.includes('node')) {
     // 1A. Middle of Linked List (User's specific query)

@@ -23,6 +23,26 @@
   },
   "conversations": [
     {
+      "id": "conv-1794370096870-7kz01",
+      "title": "New Conversation",
+      "createdAt": "2026-11-11T04:08:16.870Z",
+      "updatedAt": "2026-11-11T04:08:16.870Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794370065546-alq7j",
+      "title": "New Conversation",
+      "createdAt": "2026-11-11T04:07:45.546Z",
+      "updatedAt": "2026-11-11T04:07:45.546Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
       "id": "conv-1794312678432-eppi0",
       "title": "New Conversation",
       "createdAt": "2026-11-10T12:11:18.432Z",
@@ -428,6 +448,36 @@
       "modelUsed": "gemini-3.8-flash",
       "id": "msg-1794312680048-86ea9",
       "createdAt": "2026-11-10T12:11:20.048Z"
+    },
+    {
+      "conversationId": "test-fib-final",
+      "role": "user",
+      "content": "given an code for finding fibonacci series",
+      "id": "msg-1794370065546-vqtxv",
+      "createdAt": "2026-11-11T04:07:45.546Z"
+    },
+    {
+      "conversationId": "test-fib-final",
+      "role": "assistant",
+      "content": "Here are two clean, strongly typed TypeScript approaches for working with the Fibonacci series: an **iterative array generator** (best for getting the first $n$ numbers) and an **infinite generator** (best for streaming/lazy evaluation).\n\n---\n\n### 1. Iterative Array Generator (First $n$ numbers)\n\nThis function returns the first `n` numbers of the Fibonacci sequence with $O(n)$ time complexity and $O(n)$ space complexity.\n\n```typescript\n/**\n * Generates an array containing the first `n` numbers of the Fibonacci sequence.\n *\n * @param count - The number of Fibonacci numbers to generate. Must be non-negative.\n * @returns An array of Fibonacci numbers.\n * @throws {RangeError} If `count` is a negative integer.\n */\nexport function getFibonacciSequence(count: number): number[] {\n  if (count < 0 || !Number.isInteger(count)) {\n    throw new RangeError(\"Count must be a non-negative integer.\");\n  }\n\n  if (count === 0) return [];\n  if (count === 1) return [0];\n\n  const sequence: number[] = [0, 1];\n\n  for (let i = 2; i < count; i++) {\n    // Explicit non-null assertion or indexing is safe because of array bounds\n    const nextValue = sequence[i - 1]! + sequence[i - 2]!;\n    sequence.push(nextValue);\n  }\n\n  return sequence;\n}\n\n// Example usage:\nconst first10 = getFibonacciSequence(10);\nconsole.log(first10); \n// Output: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]\n```\n\n---\n\n### 2. Lazy / Infinite Generator\n\nIf you don't know in advance how many terms you need, or want to consume them on demand without storing everything in memory, use an ES6 Generator:\n\n```typescript\n/**\n * Infinite generator yielding consecutive Fibonacci numbers.\n * Memory complexity: O(1)\n */\nexport function* fibonacciGenerator(): Generator<number, void, unknown> {\n  let current = 0;\n  let next = 1;\n\n  while (true) {\n    yield current;\n    [current, next] = [next, current + next];\n  }\n}\n\n// Example usage: Take values until a threshold\nconst fibGen = fibonacciGenerator();\n\n// Get the first 5 numbers on demand\nfor (let i = 0; i < 5; i++) {\n  console.log(fibGen.next().value);\n}\n// Output: 0, 1, 1, 2, 3\n```\n\n---\n\n### Key Points:\n* **Edge Cases**: Handled inputs like `0` (returns `[]`), `1` (returns `[0]`), and negative/non-integer values (throws a typed `RangeError`).\n* **Performance**: Avoids recursive implementations without memoization, preventing $O(2^n)$ exponential time. Both implementations run in linear $O(n)$ time.",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794370075638-syc5w",
+      "createdAt": "2026-11-11T04:07:55.638Z"
+    },
+    {
+      "conversationId": "test-conv-99",
+      "role": "user",
+      "content": "hi",
+      "id": "msg-1794370096871-5sr6p",
+      "createdAt": "2026-11-11T04:08:16.871Z"
+    },
+    {
+      "conversationId": "test-conv-99",
+      "role": "assistant",
+      "content": "Hello! How can I help you today?",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794370109376-211xe",
+      "createdAt": "2026-11-11T04:08:29.376Z"
     }
   ],
   "memories": [

@@ -1,68 +1,62 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-};
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
+// server.ts
+import express from "express";
+import http from "http";
+import dotenv from "dotenv";
+import path3 from "path";
+import fs3 from "fs";
 
 // server/db.ts
 import fs from "fs";
 import path from "path";
-var DATA_DIR, DB_FILE, defaultSettings, defaultConversations, defaultMessages, defaultMemories, defaultTasks, defaultNotes, Database, db;
-var init_db = __esm({
-  "server/db.ts"() {
-    DATA_DIR = path.resolve(process.cwd(), "data");
-    DB_FILE = path.join(DATA_DIR, "mitall_db.json");
-    defaultSettings = {
-      aiName: "MITALL",
-      theme: "dark",
-      language: "English",
-      personality: "friendly_mentor",
-      temperature: 0.7,
-      maxTokens: 4096,
-      activeProvider: "gemini",
-      geminiModel: "gemini-3.8-flash",
-      geminiApiKey: "",
-      ollamaEndpoint: "http://127.0.0.1:11434",
-      ollamaModel: "llama3.2",
-      openaiEndpoint: "https://api.openai.com/v1",
-      openaiModel: "gpt-4o",
-      openaiApiKey: "",
-      memoryEnabled: true,
-      webSearchEnabled: true,
-      voiceEnabled: true,
-      speechSpeed: 1,
-      voiceGender: "default",
-      technicalExplanationLevel: "intermediate"
-    };
-    defaultConversations = [
-      {
-        id: "conv-welcome",
-        title: "Welcome to MITALL Personal Intelligence",
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        isArchived: false,
-        pinned: true,
-        messagesCount: 2,
-        lastMessagePreview: "Hello! I am MITALL, your personal AI assistant."
-      }
-    ];
-    defaultMessages = [
-      {
-        id: "msg-w1",
-        conversationId: "conv-welcome",
-        role: "user",
-        content: "Who are you and what can you help me with?",
-        createdAt: new Date(Date.now() - 6e4).toISOString()
-      },
-      {
-        id: "msg-w2",
-        conversationId: "conv-welcome",
-        role: "assistant",
-        content: `Hello! I am **MITALL**, your general-purpose personal AI assistant.
+var DATA_DIR = path.resolve(process.cwd(), "data");
+var DB_FILE = path.join(DATA_DIR, "mitall_db.json");
+var defaultSettings = {
+  aiName: "MITALL",
+  theme: "dark",
+  language: "English",
+  personality: "friendly_mentor",
+  temperature: 0.7,
+  maxTokens: 4096,
+  activeProvider: "gemini",
+  geminiModel: "gemini-3.8-flash",
+  geminiApiKey: "",
+  ollamaEndpoint: "http://127.0.0.1:11434",
+  ollamaModel: "llama3.2",
+  openaiEndpoint: "https://api.openai.com/v1",
+  openaiModel: "gpt-4o",
+  openaiApiKey: "",
+  memoryEnabled: true,
+  webSearchEnabled: true,
+  voiceEnabled: true,
+  speechSpeed: 1,
+  voiceGender: "default",
+  technicalExplanationLevel: "intermediate"
+};
+var defaultConversations = [
+  {
+    id: "conv-welcome",
+    title: "Welcome to MITALL Personal Intelligence",
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    isArchived: false,
+    pinned: true,
+    messagesCount: 2,
+    lastMessagePreview: "Hello! I am MITALL, your personal AI assistant."
+  }
+];
+var defaultMessages = [
+  {
+    id: "msg-w1",
+    conversationId: "conv-welcome",
+    role: "user",
+    content: "Who are you and what can you help me with?",
+    createdAt: new Date(Date.now() - 6e4).toISOString()
+  },
+  {
+    id: "msg-w2",
+    conversationId: "conv-welcome",
+    role: "assistant",
+    content: `Hello! I am **MITALL**, your general-purpose personal AI assistant.
 
 I can discuss and help with virtually any legitimate topic, including:
 - \u{1F52C} **Science & Math**: Physics, astronomy, biology, chemistry, calculus, and statistics.
@@ -73,73 +67,73 @@ I can discuss and help with virtually any legitimate topic, including:
 - \u26A1 **Personal Productivity**: Managing tasks, in-app reminders, personal memories, and document research.
 
 What would you like to explore or discuss right now?`,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        modelUsed: "gemini-3.8-flash"
-      }
-    ];
-    defaultMemories = [
-      {
-        id: "mem-1",
-        content: "User prefers clean, modular code with strong TypeScript types and clear explanations.",
-        category: "preferences",
-        isActive: true,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-      },
-      {
-        id: "mem-2",
-        content: "Primary goal is mastering full-stack AI orchestration, algorithms, and high-performance systems.",
-        category: "learning_goals",
-        isActive: true,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-      },
-      {
-        id: "mem-3",
-        content: "Current project: MITALL Personal Intelligence Assistant with multi-provider AI support.",
-        category: "project_info",
-        isActive: true,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-      }
-    ];
-    defaultTasks = [
-      {
-        id: "task-1",
-        title: "Explore MITALL Knowledge Base upload",
-        description: "Upload a PDF or markdown document to test semantic RAG search.",
-        category: "research",
-        priority: "high",
-        dueDate: new Date(Date.now() + 864e5).toISOString().split("T")[0],
-        completed: false,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString()
-      },
-      {
-        id: "task-2",
-        title: "Test Coding Assistant & Safe Sandbox",
-        description: "Run Python/JavaScript algorithms and inspect complexity breakdown.",
-        category: "coding",
-        priority: "medium",
-        dueDate: new Date(Date.now() + 1728e5).toISOString().split("T")[0],
-        completed: false,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString()
-      },
-      {
-        id: "task-3",
-        title: "Configure AI Provider settings",
-        description: "Verify Gemini 3.8 Flash, or connect local Ollama if installed.",
-        category: "work",
-        priority: "low",
-        completed: true,
-        completedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        createdAt: (/* @__PURE__ */ new Date()).toISOString()
-      }
-    ];
-    defaultNotes = [
-      {
-        id: "note-1",
-        title: "MITALL Architecture Notes",
-        content: `# MITALL Personal Intelligence Architecture
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    modelUsed: "gemini-3.8-flash"
+  }
+];
+var defaultMemories = [
+  {
+    id: "mem-1",
+    content: "User prefers clean, modular code with strong TypeScript types and clear explanations.",
+    category: "preferences",
+    isActive: true,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  },
+  {
+    id: "mem-2",
+    content: "Primary goal is mastering full-stack AI orchestration, algorithms, and high-performance systems.",
+    category: "learning_goals",
+    isActive: true,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  },
+  {
+    id: "mem-3",
+    content: "Current project: MITALL Personal Intelligence Assistant with multi-provider AI support.",
+    category: "project_info",
+    isActive: true,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  }
+];
+var defaultTasks = [
+  {
+    id: "task-1",
+    title: "Explore MITALL Knowledge Base upload",
+    description: "Upload a PDF or markdown document to test semantic RAG search.",
+    category: "research",
+    priority: "high",
+    dueDate: new Date(Date.now() + 864e5).toISOString().split("T")[0],
+    completed: false,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString()
+  },
+  {
+    id: "task-2",
+    title: "Test Coding Assistant & Safe Sandbox",
+    description: "Run Python/JavaScript algorithms and inspect complexity breakdown.",
+    category: "coding",
+    priority: "medium",
+    dueDate: new Date(Date.now() + 1728e5).toISOString().split("T")[0],
+    completed: false,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString()
+  },
+  {
+    id: "task-3",
+    title: "Configure AI Provider settings",
+    description: "Verify Gemini 3.8 Flash, or connect local Ollama if installed.",
+    category: "work",
+    priority: "low",
+    completed: true,
+    completedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    createdAt: (/* @__PURE__ */ new Date()).toISOString()
+  }
+];
+var defaultNotes = [
+  {
+    id: "note-1",
+    title: "MITALL Architecture Notes",
+    content: `# MITALL Personal Intelligence Architecture
 
 MITALL operates through a modular AI orchestration pipeline:
 1. **Frontend**: React + TypeScript + Tailwind CSS with dark/light themes.
@@ -148,350 +142,348 @@ MITALL operates through a modular AI orchestration pipeline:
 4. **Memory**: Two-tier memory (Short-term conversation context + Persistent long-term user memories).
 5. **RAG Knowledge Base**: Document chunking and TF-IDF / vector similarity retrieval.
 6. **Tool Suite**: Calculator, Web Search, Code Analysis, Task & Note managers.`,
-        tags: ["Architecture", "MITALL", "AI"],
-        pinned: true,
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-      }
-    ];
-    Database = class {
-      constructor() {
-        this.ensureDirectory();
-        this.data = this.load();
-      }
-      ensureDirectory() {
-        if (!fs.existsSync(DATA_DIR)) {
-          fs.mkdirSync(DATA_DIR, { recursive: true });
-        }
-      }
-      load() {
-        try {
-          if (fs.existsSync(DB_FILE)) {
-            const raw = fs.readFileSync(DB_FILE, "utf-8");
-            const parsed = JSON.parse(raw);
-            return {
-              settings: { ...defaultSettings, ...parsed.settings || {} },
-              conversations: parsed.conversations || defaultConversations,
-              messages: parsed.messages || defaultMessages,
-              memories: parsed.memories || defaultMemories,
-              documents: parsed.documents || [],
-              documentChunks: parsed.documentChunks || [],
-              tasks: parsed.tasks || defaultTasks,
-              notes: parsed.notes || defaultNotes,
-              toolLogs: parsed.toolLogs || []
-            };
-          }
-        } catch (err) {
-          console.error("Error reading database file, using defaults:", err);
-        }
-        const initial = {
-          settings: defaultSettings,
-          conversations: defaultConversations,
-          messages: defaultMessages,
-          memories: defaultMemories,
-          documents: [],
-          documentChunks: [],
-          tasks: defaultTasks,
-          notes: defaultNotes,
-          toolLogs: []
-        };
-        this.saveData(initial);
-        return initial;
-      }
-      saveData(data) {
-        try {
-          this.ensureDirectory();
-          const tmp = `${DB_FILE}.tmp`;
-          fs.writeFileSync(tmp, JSON.stringify(data, null, 2), "utf-8");
-          fs.renameSync(tmp, DB_FILE);
-        } catch (err) {
-          console.error("Error saving database:", err);
-        }
-      }
-      persist() {
-        this.saveData(this.data);
-      }
-      // Settings
-      getSettings() {
-        return this.data.settings;
-      }
-      updateSettings(patch) {
-        this.data.settings = { ...this.data.settings, ...patch };
-        this.persist();
-        return this.data.settings;
-      }
-      // Conversations
-      getConversations() {
-        const fiveMinutesAgo = Date.now() - 5 * 60 * 1e3;
-        return [...this.data.conversations].filter((c) => c.messagesCount > 0 || new Date(c.createdAt).getTime() > fiveMinutesAgo || c.id === "conv-welcome").sort((a, b) => {
-          if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-        });
-      }
-      getConversation(id) {
-        return this.data.conversations.find((c) => c.id === id);
-      }
-      createConversation(title) {
-        const conv = {
-          id: `conv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          title: title || "New Conversation",
-          createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-          updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
-          isArchived: false,
-          pinned: false,
-          messagesCount: 0,
-          lastMessagePreview: ""
-        };
-        this.data.conversations.unshift(conv);
-        this.persist();
-        return conv;
-      }
-      updateConversation(id, patch) {
-        const idx = this.data.conversations.findIndex((c) => c.id === id);
-        if (idx === -1) return void 0;
-        this.data.conversations[idx] = {
-          ...this.data.conversations[idx],
-          ...patch,
-          updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.persist();
-        return this.data.conversations[idx];
-      }
-      deleteConversation(id) {
-        const initialLen = this.data.conversations.length;
-        this.data.conversations = this.data.conversations.filter((c) => c.id !== id);
-        this.data.messages = this.data.messages.filter((m) => m.conversationId !== id);
-        if (this.data.conversations.length !== initialLen) {
-          this.persist();
-          return true;
-        }
-        return false;
-      }
-      // Messages
-      getMessages(conversationId) {
-        return this.data.messages.filter((m) => m.conversationId === conversationId).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      }
-      addMessage(msg) {
-        const fullMsg = {
-          ...msg,
-          id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          createdAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.data.messages.push(fullMsg);
-        const conv = this.getConversation(msg.conversationId);
-        if (conv) {
-          conv.messagesCount += 1;
-          conv.lastMessagePreview = msg.content.substring(0, 100);
-          conv.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
-          if (conv.title === "New Conversation" && msg.role === "user") {
-            conv.title = msg.content.substring(0, 36) + (msg.content.length > 36 ? "..." : "");
-          }
-        }
-        this.persist();
-        return fullMsg;
-      }
-      deleteMessage(id) {
-        const msg = this.data.messages.find((m) => m.id === id);
-        if (!msg) return false;
-        this.data.messages = this.data.messages.filter((m) => m.id !== id);
-        const conv = this.getConversation(msg.conversationId);
-        if (conv) {
-          conv.messagesCount = Math.max(0, conv.messagesCount - 1);
-        }
-        this.persist();
-        return true;
-      }
-      // Memories
-      getMemories() {
-        return [...this.data.memories].sort(
-          (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-        );
-      }
-      getActiveMemories() {
-        return this.data.memories.filter((m) => m.isActive);
-      }
-      addMemory(content, category = "preferences") {
-        const mem = {
-          id: `mem-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          content: content.trim(),
-          category,
-          isActive: true,
-          createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-          updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.data.memories.unshift(mem);
-        this.persist();
-        return mem;
-      }
-      updateMemory(id, patch) {
-        const idx = this.data.memories.findIndex((m) => m.id === id);
-        if (idx === -1) return void 0;
-        this.data.memories[idx] = {
-          ...this.data.memories[idx],
-          ...patch,
-          updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.persist();
-        return this.data.memories[idx];
-      }
-      deleteMemory(id) {
-        const len = this.data.memories.length;
-        this.data.memories = this.data.memories.filter((m) => m.id !== id);
-        if (this.data.memories.length !== len) {
-          this.persist();
-          return true;
-        }
-        return false;
-      }
-      // Documents & RAG
-      getDocuments() {
-        return [...this.data.documents].sort(
-          (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
-        );
-      }
-      getDocument(id) {
-        return this.data.documents.find((d) => d.id === id);
-      }
-      addDocument(doc, chunks) {
-        this.data.documents.unshift(doc);
-        this.data.documentChunks.push(...chunks);
-        this.persist();
-      }
-      deleteDocument(id) {
-        const len = this.data.documents.length;
-        this.data.documents = this.data.documents.filter((d) => d.id !== id);
-        this.data.documentChunks = this.data.documentChunks.filter((c) => c.docId !== id);
-        if (this.data.documents.length !== len) {
-          this.persist();
-          return true;
-        }
-        return false;
-      }
-      getDocumentChunks(docId) {
-        if (docId) {
-          return this.data.documentChunks.filter((c) => c.docId === docId);
-        }
-        return this.data.documentChunks;
-      }
-      // Tasks
-      getTasks() {
-        return [...this.data.tasks].sort((a, b) => {
-          if (a.completed === b.completed) {
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-          }
-          return a.completed ? 1 : -1;
-        });
-      }
-      addTask(task) {
-        const item = {
-          ...task,
-          id: `task-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          createdAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.data.tasks.unshift(item);
-        this.persist();
-        return item;
-      }
-      updateTask(id, patch) {
-        const idx = this.data.tasks.findIndex((t) => t.id === id);
-        if (idx === -1) return void 0;
-        if (patch.completed !== void 0 && patch.completed && !this.data.tasks[idx].completed) {
-          patch.completedAt = (/* @__PURE__ */ new Date()).toISOString();
-        } else if (patch.completed === false) {
-          patch.completedAt = void 0;
-        }
-        this.data.tasks[idx] = { ...this.data.tasks[idx], ...patch };
-        this.persist();
-        return this.data.tasks[idx];
-      }
-      deleteTask(id) {
-        const len = this.data.tasks.length;
-        this.data.tasks = this.data.tasks.filter((t) => t.id !== id);
-        if (this.data.tasks.length !== len) {
-          this.persist();
-          return true;
-        }
-        return false;
-      }
-      // Notes
-      getNotes() {
-        return [...this.data.notes].sort((a, b) => {
-          if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-        });
-      }
-      addNote(note) {
-        const item = {
-          ...note,
-          id: `note-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-          updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.data.notes.unshift(item);
-        this.persist();
-        return item;
-      }
-      updateNote(id, patch) {
-        const idx = this.data.notes.findIndex((n) => n.id === id);
-        if (idx === -1) return void 0;
-        this.data.notes[idx] = {
-          ...this.data.notes[idx],
-          ...patch,
-          updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-        };
-        this.persist();
-        return this.data.notes[idx];
-      }
-      deleteNote(id) {
-        const len = this.data.notes.length;
-        this.data.notes = this.data.notes.filter((n) => n.id !== id);
-        if (this.data.notes.length !== len) {
-          this.persist();
-          return true;
-        }
-        return false;
-      }
-      // Tool Logs
-      logTool(tool) {
-        this.data.toolLogs.unshift({
-          ...tool,
-          id: `tool-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
-        });
-        if (this.data.toolLogs.length > 100) {
-          this.data.toolLogs = this.data.toolLogs.slice(0, 100);
-        }
-        this.persist();
-      }
-      getToolLogs() {
-        return this.data.toolLogs;
-      }
-      // Export & Clear
-      exportAll() {
-        return {
-          exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
-          version: "1.0.0",
-          data: this.data
-        };
-      }
-      clearAllData() {
-        this.data = {
-          settings: defaultSettings,
-          conversations: defaultConversations,
-          messages: defaultMessages,
-          memories: defaultMemories,
-          documents: [],
-          documentChunks: [],
-          tasks: defaultTasks,
-          notes: defaultNotes,
-          toolLogs: []
-        };
-        this.persist();
-        return true;
-      }
-    };
-    db = new Database();
+    tags: ["Architecture", "MITALL", "AI"],
+    pinned: true,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
   }
-});
+];
+var Database = class {
+  constructor() {
+    this.ensureDirectory();
+    this.data = this.load();
+  }
+  ensureDirectory() {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  }
+  load() {
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        const raw = fs.readFileSync(DB_FILE, "utf-8");
+        const parsed = JSON.parse(raw);
+        return {
+          settings: { ...defaultSettings, ...parsed.settings || {} },
+          conversations: parsed.conversations || defaultConversations,
+          messages: parsed.messages || defaultMessages,
+          memories: parsed.memories || defaultMemories,
+          documents: parsed.documents || [],
+          documentChunks: parsed.documentChunks || [],
+          tasks: parsed.tasks || defaultTasks,
+          notes: parsed.notes || defaultNotes,
+          toolLogs: parsed.toolLogs || []
+        };
+      }
+    } catch (err) {
+      console.error("Error reading database file, using defaults:", err);
+    }
+    const initial = {
+      settings: defaultSettings,
+      conversations: defaultConversations,
+      messages: defaultMessages,
+      memories: defaultMemories,
+      documents: [],
+      documentChunks: [],
+      tasks: defaultTasks,
+      notes: defaultNotes,
+      toolLogs: []
+    };
+    this.saveData(initial);
+    return initial;
+  }
+  saveData(data) {
+    try {
+      this.ensureDirectory();
+      const tmp = `${DB_FILE}.tmp`;
+      fs.writeFileSync(tmp, JSON.stringify(data, null, 2), "utf-8");
+      fs.renameSync(tmp, DB_FILE);
+    } catch (err) {
+      console.error("Error saving database:", err);
+    }
+  }
+  persist() {
+    this.saveData(this.data);
+  }
+  // Settings
+  getSettings() {
+    return this.data.settings;
+  }
+  updateSettings(patch) {
+    this.data.settings = { ...this.data.settings, ...patch };
+    this.persist();
+    return this.data.settings;
+  }
+  // Conversations
+  getConversations() {
+    const fiveMinutesAgo = Date.now() - 5 * 60 * 1e3;
+    return [...this.data.conversations].filter((c) => c.messagesCount > 0 || new Date(c.createdAt).getTime() > fiveMinutesAgo || c.id === "conv-welcome").sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+  }
+  getConversation(id) {
+    return this.data.conversations.find((c) => c.id === id);
+  }
+  createConversation(title) {
+    const conv = {
+      id: `conv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      title: title || "New Conversation",
+      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      isArchived: false,
+      pinned: false,
+      messagesCount: 0,
+      lastMessagePreview: ""
+    };
+    this.data.conversations.unshift(conv);
+    this.persist();
+    return conv;
+  }
+  updateConversation(id, patch) {
+    const idx = this.data.conversations.findIndex((c) => c.id === id);
+    if (idx === -1) return void 0;
+    this.data.conversations[idx] = {
+      ...this.data.conversations[idx],
+      ...patch,
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.persist();
+    return this.data.conversations[idx];
+  }
+  deleteConversation(id) {
+    const initialLen = this.data.conversations.length;
+    this.data.conversations = this.data.conversations.filter((c) => c.id !== id);
+    this.data.messages = this.data.messages.filter((m) => m.conversationId !== id);
+    if (this.data.conversations.length !== initialLen) {
+      this.persist();
+      return true;
+    }
+    return false;
+  }
+  // Messages
+  getMessages(conversationId) {
+    return this.data.messages.filter((m) => m.conversationId === conversationId).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
+  addMessage(msg) {
+    const fullMsg = {
+      ...msg,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.data.messages.push(fullMsg);
+    const conv = this.getConversation(msg.conversationId);
+    if (conv) {
+      conv.messagesCount += 1;
+      conv.lastMessagePreview = msg.content.substring(0, 100);
+      conv.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+      if (conv.title === "New Conversation" && msg.role === "user") {
+        conv.title = msg.content.substring(0, 36) + (msg.content.length > 36 ? "..." : "");
+      }
+    }
+    this.persist();
+    return fullMsg;
+  }
+  deleteMessage(id) {
+    const msg = this.data.messages.find((m) => m.id === id);
+    if (!msg) return false;
+    this.data.messages = this.data.messages.filter((m) => m.id !== id);
+    const conv = this.getConversation(msg.conversationId);
+    if (conv) {
+      conv.messagesCount = Math.max(0, conv.messagesCount - 1);
+    }
+    this.persist();
+    return true;
+  }
+  // Memories
+  getMemories() {
+    return [...this.data.memories].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+  }
+  getActiveMemories() {
+    return this.data.memories.filter((m) => m.isActive);
+  }
+  addMemory(content, category = "preferences") {
+    const mem = {
+      id: `mem-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      content: content.trim(),
+      category,
+      isActive: true,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.data.memories.unshift(mem);
+    this.persist();
+    return mem;
+  }
+  updateMemory(id, patch) {
+    const idx = this.data.memories.findIndex((m) => m.id === id);
+    if (idx === -1) return void 0;
+    this.data.memories[idx] = {
+      ...this.data.memories[idx],
+      ...patch,
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.persist();
+    return this.data.memories[idx];
+  }
+  deleteMemory(id) {
+    const len = this.data.memories.length;
+    this.data.memories = this.data.memories.filter((m) => m.id !== id);
+    if (this.data.memories.length !== len) {
+      this.persist();
+      return true;
+    }
+    return false;
+  }
+  // Documents & RAG
+  getDocuments() {
+    return [...this.data.documents].sort(
+      (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+    );
+  }
+  getDocument(id) {
+    return this.data.documents.find((d) => d.id === id);
+  }
+  addDocument(doc, chunks) {
+    this.data.documents.unshift(doc);
+    this.data.documentChunks.push(...chunks);
+    this.persist();
+  }
+  deleteDocument(id) {
+    const len = this.data.documents.length;
+    this.data.documents = this.data.documents.filter((d) => d.id !== id);
+    this.data.documentChunks = this.data.documentChunks.filter((c) => c.docId !== id);
+    if (this.data.documents.length !== len) {
+      this.persist();
+      return true;
+    }
+    return false;
+  }
+  getDocumentChunks(docId) {
+    if (docId) {
+      return this.data.documentChunks.filter((c) => c.docId === docId);
+    }
+    return this.data.documentChunks;
+  }
+  // Tasks
+  getTasks() {
+    return [...this.data.tasks].sort((a, b) => {
+      if (a.completed === b.completed) {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      return a.completed ? 1 : -1;
+    });
+  }
+  addTask(task) {
+    const item = {
+      ...task,
+      id: `task-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.data.tasks.unshift(item);
+    this.persist();
+    return item;
+  }
+  updateTask(id, patch) {
+    const idx = this.data.tasks.findIndex((t) => t.id === id);
+    if (idx === -1) return void 0;
+    if (patch.completed !== void 0 && patch.completed && !this.data.tasks[idx].completed) {
+      patch.completedAt = (/* @__PURE__ */ new Date()).toISOString();
+    } else if (patch.completed === false) {
+      patch.completedAt = void 0;
+    }
+    this.data.tasks[idx] = { ...this.data.tasks[idx], ...patch };
+    this.persist();
+    return this.data.tasks[idx];
+  }
+  deleteTask(id) {
+    const len = this.data.tasks.length;
+    this.data.tasks = this.data.tasks.filter((t) => t.id !== id);
+    if (this.data.tasks.length !== len) {
+      this.persist();
+      return true;
+    }
+    return false;
+  }
+  // Notes
+  getNotes() {
+    return [...this.data.notes].sort((a, b) => {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+  }
+  addNote(note) {
+    const item = {
+      ...note,
+      id: `note-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.data.notes.unshift(item);
+    this.persist();
+    return item;
+  }
+  updateNote(id, patch) {
+    const idx = this.data.notes.findIndex((n) => n.id === id);
+    if (idx === -1) return void 0;
+    this.data.notes[idx] = {
+      ...this.data.notes[idx],
+      ...patch,
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    this.persist();
+    return this.data.notes[idx];
+  }
+  deleteNote(id) {
+    const len = this.data.notes.length;
+    this.data.notes = this.data.notes.filter((n) => n.id !== id);
+    if (this.data.notes.length !== len) {
+      this.persist();
+      return true;
+    }
+    return false;
+  }
+  // Tool Logs
+  logTool(tool) {
+    this.data.toolLogs.unshift({
+      ...tool,
+      id: `tool-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
+    });
+    if (this.data.toolLogs.length > 100) {
+      this.data.toolLogs = this.data.toolLogs.slice(0, 100);
+    }
+    this.persist();
+  }
+  getToolLogs() {
+    return this.data.toolLogs;
+  }
+  // Export & Clear
+  exportAll() {
+    return {
+      exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      version: "1.0.0",
+      data: this.data
+    };
+  }
+  clearAllData() {
+    this.data = {
+      settings: defaultSettings,
+      conversations: defaultConversations,
+      messages: defaultMessages,
+      memories: defaultMemories,
+      documents: [],
+      documentChunks: [],
+      tasks: defaultTasks,
+      notes: defaultNotes,
+      toolLogs: []
+    };
+    this.persist();
+    return true;
+  }
+};
+var db = new Database();
 
 // server/rag.ts
 function chunkText(text, chunkSize = 600, overlap = 100) {
@@ -577,11 +569,6 @@ function parseUploadedContent(filename, rawContent) {
     fileType: ext
   };
 }
-var init_rag = __esm({
-  "server/rag.ts"() {
-    init_db();
-  }
-});
 
 // server/codeRunner.ts
 import { execFile } from "child_process";
@@ -913,10 +900,6 @@ Status: OK`,
     language: lang
   };
 }
-var init_codeRunner = __esm({
-  "server/codeRunner.ts"() {
-  }
-});
 
 // server/tools.ts
 function evaluateMath(expr) {
@@ -987,6 +970,211 @@ async function executeWebSearch(query) {
     }
   ];
 }
+var toolRegistry = {
+  calculator: {
+    name: "calculator",
+    description: "Calculate mathematical expressions, evaluate formulas, percentages, and scientific values.",
+    parameters: {
+      type: "object",
+      properties: {
+        expression: { type: "string", description: "Mathematical expression e.g. 2 * (15 + 4) or sqrt(144)" }
+      },
+      required: ["expression"]
+    },
+    handler: async (args) => {
+      const expr = String(args.expression || "");
+      try {
+        const result = evaluateMath(expr);
+        return { expression: expr, result, formatted: `${expr} = ${result}` };
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        return { error: `Calculation failed: ${msg}` };
+      }
+    }
+  },
+  dateTime: {
+    name: "dateTime",
+    description: "Get the current date, local time, ISO timestamp, and time zone information.",
+    parameters: {
+      type: "object",
+      properties: {
+        timezone: { type: "string", description: "Optional timezone" }
+      }
+    },
+    handler: async () => {
+      const now = /* @__PURE__ */ new Date();
+      return {
+        iso: now.toISOString(),
+        formattedDate: now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
+        formattedTime: now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" }),
+        timestamp: now.getTime(),
+        timezoneOffset: now.getTimezoneOffset()
+      };
+    }
+  },
+  webSearch: {
+    name: "webSearch",
+    description: "Search the web for up-to-date facts, news, documentation, or links.",
+    parameters: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Search term or query" }
+      },
+      required: ["query"]
+    },
+    handler: async (args) => {
+      const query = String(args.query || "");
+      const results = await executeWebSearch(query);
+      return { query, resultsCount: results.length, results };
+    }
+  },
+  documentSearch: {
+    name: "documentSearch",
+    description: "Search personal knowledge base documents and uploaded files via semantic similarity.",
+    parameters: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Topic or question to search within documents" },
+        topK: { type: "number", description: "Max chunks to retrieve" }
+      },
+      required: ["query"]
+    },
+    handler: async (args) => {
+      const query = String(args.query || "");
+      const topK = Number(args.topK) || 3;
+      const matches = searchKnowledgeBase(query, topK);
+      return { query, matchesFound: matches.length, matches };
+    }
+  },
+  fileReader: {
+    name: "fileReader",
+    description: "Read the full text or metadata of an uploaded document in the knowledge base.",
+    parameters: {
+      type: "object",
+      properties: {
+        docId: { type: "string", description: "Document ID to read" }
+      },
+      required: ["docId"]
+    },
+    handler: async (args) => {
+      const docId = String(args.docId || "");
+      const doc = db.getDocument(docId);
+      if (!doc) return { error: `Document with ID ${docId} not found.` };
+      const chunks = db.getDocumentChunks(docId);
+      return {
+        document: doc,
+        chunkCount: chunks.length,
+        preview: chunks.slice(0, 3).map((c) => c.content).join("\n---\n")
+      };
+    }
+  },
+  codeRunner: {
+    name: "codeRunner",
+    description: "Safely execute code in a sandboxed runtime environment (JavaScript, Python) with captured output.",
+    parameters: {
+      type: "object",
+      properties: {
+        code: { type: "string", description: "Code to run" },
+        language: { type: "string", description: "Language: javascript or python" }
+      },
+      required: ["code"]
+    },
+    handler: async (args) => {
+      const code = String(args.code || "");
+      const language = String(args.language || "javascript");
+      return executeCodeSandbox(code, language);
+    }
+  },
+  notesTool: {
+    name: "notesTool",
+    description: "Manage personal notes: create, search, or view user notes.",
+    parameters: {
+      type: "object",
+      properties: {
+        action: { type: "string", description: "create, search, or list" },
+        title: { type: "string", description: "Note title" },
+        content: { type: "string", description: "Note markdown content" },
+        tags: { type: "array", items: { type: "string" } },
+        query: { type: "string", description: "Search keyword" }
+      },
+      required: ["action"]
+    },
+    handler: async (args) => {
+      const action = String(args.action);
+      if (action === "create") {
+        const title = String(args.title || "Untitled Note");
+        const content = String(args.content || "");
+        const tags = Array.isArray(args.tags) ? args.tags : [];
+        const note = db.addNote({ title, content, tags, pinned: false });
+        return { success: true, message: `Note "${note.title}" created.`, note };
+      } else if (action === "search") {
+        const q = String(args.query || "").toLowerCase();
+        const allNotes = db.getNotes();
+        const filtered = allNotes.filter(
+          (n) => n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q)
+        );
+        return { matches: filtered };
+      } else {
+        return { notes: db.getNotes().slice(0, 5) };
+      }
+    }
+  },
+  tasksTool: {
+    name: "tasksTool",
+    description: "Manage personal tasks: add, complete, or list user tasks.",
+    parameters: {
+      type: "object",
+      properties: {
+        action: { type: "string", description: "add, complete, or list" },
+        title: { type: "string", description: "Task title" },
+        priority: { type: "string", description: "urgent, high, medium, low" },
+        category: { type: "string", description: "coding, learning, work, personal, research" },
+        taskId: { type: "string", description: "Task ID for completing" }
+      },
+      required: ["action"]
+    },
+    handler: async (args) => {
+      const action = String(args.action);
+      if (action === "add") {
+        const title = String(args.title || "New Task");
+        const priority = args.priority || "medium";
+        const category = args.category || "work";
+        const task = db.addTask({
+          title,
+          priority,
+          category,
+          completed: false
+        });
+        return { success: true, message: `Task "${task.title}" added with ${priority} priority.`, task };
+      } else if (action === "complete") {
+        const id = String(args.taskId || "");
+        const updated = db.updateTask(id, { completed: true });
+        return { success: !!updated, message: updated ? `Task marked completed.` : "Task not found" };
+      } else {
+        return { pendingTasks: db.getTasks().filter((t) => !t.completed) };
+      }
+    }
+  },
+  conversationSearch: {
+    name: "conversationSearch",
+    description: "Search message history across previous conversations.",
+    parameters: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Text or topic to look for in chat history" }
+      },
+      required: ["query"]
+    },
+    handler: async (args) => {
+      const q = String(args.query || "").toLowerCase();
+      const convs = db.getConversations();
+      const matchedConvs = convs.filter(
+        (c) => c.title.toLowerCase().includes(q) || c.lastMessagePreview && c.lastMessagePreview.toLowerCase().includes(q)
+      );
+      return { matchesCount: matchedConvs.length, conversations: matchedConvs };
+    }
+  }
+};
 async function executeTool(name, input) {
   const tool = toolRegistry[name];
   const timestamp = (/* @__PURE__ */ new Date()).toISOString();
@@ -1025,224 +1213,30 @@ async function executeTool(name, input) {
     return failureLog;
   }
 }
-var toolRegistry;
-var init_tools = __esm({
-  "server/tools.ts"() {
-    init_db();
-    init_rag();
-    init_codeRunner();
-    toolRegistry = {
-      calculator: {
-        name: "calculator",
-        description: "Calculate mathematical expressions, evaluate formulas, percentages, and scientific values.",
-        parameters: {
-          type: "object",
-          properties: {
-            expression: { type: "string", description: "Mathematical expression e.g. 2 * (15 + 4) or sqrt(144)" }
-          },
-          required: ["expression"]
-        },
-        handler: async (args) => {
-          const expr = String(args.expression || "");
-          try {
-            const result = evaluateMath(expr);
-            return { expression: expr, result, formatted: `${expr} = ${result}` };
-          } catch (err) {
-            const msg = err instanceof Error ? err.message : String(err);
-            return { error: `Calculation failed: ${msg}` };
-          }
-        }
-      },
-      dateTime: {
-        name: "dateTime",
-        description: "Get the current date, local time, ISO timestamp, and time zone information.",
-        parameters: {
-          type: "object",
-          properties: {
-            timezone: { type: "string", description: "Optional timezone" }
-          }
-        },
-        handler: async () => {
-          const now = /* @__PURE__ */ new Date();
-          return {
-            iso: now.toISOString(),
-            formattedDate: now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
-            formattedTime: now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" }),
-            timestamp: now.getTime(),
-            timezoneOffset: now.getTimezoneOffset()
-          };
-        }
-      },
-      webSearch: {
-        name: "webSearch",
-        description: "Search the web for up-to-date facts, news, documentation, or links.",
-        parameters: {
-          type: "object",
-          properties: {
-            query: { type: "string", description: "Search term or query" }
-          },
-          required: ["query"]
-        },
-        handler: async (args) => {
-          const query = String(args.query || "");
-          const results = await executeWebSearch(query);
-          return { query, resultsCount: results.length, results };
-        }
-      },
-      documentSearch: {
-        name: "documentSearch",
-        description: "Search personal knowledge base documents and uploaded files via semantic similarity.",
-        parameters: {
-          type: "object",
-          properties: {
-            query: { type: "string", description: "Topic or question to search within documents" },
-            topK: { type: "number", description: "Max chunks to retrieve" }
-          },
-          required: ["query"]
-        },
-        handler: async (args) => {
-          const query = String(args.query || "");
-          const topK = Number(args.topK) || 3;
-          const matches = searchKnowledgeBase(query, topK);
-          return { query, matchesFound: matches.length, matches };
-        }
-      },
-      fileReader: {
-        name: "fileReader",
-        description: "Read the full text or metadata of an uploaded document in the knowledge base.",
-        parameters: {
-          type: "object",
-          properties: {
-            docId: { type: "string", description: "Document ID to read" }
-          },
-          required: ["docId"]
-        },
-        handler: async (args) => {
-          const docId = String(args.docId || "");
-          const doc = db.getDocument(docId);
-          if (!doc) return { error: `Document with ID ${docId} not found.` };
-          const chunks = db.getDocumentChunks(docId);
-          return {
-            document: doc,
-            chunkCount: chunks.length,
-            preview: chunks.slice(0, 3).map((c) => c.content).join("\n---\n")
-          };
-        }
-      },
-      codeRunner: {
-        name: "codeRunner",
-        description: "Safely execute code in a sandboxed runtime environment (JavaScript, Python) with captured output.",
-        parameters: {
-          type: "object",
-          properties: {
-            code: { type: "string", description: "Code to run" },
-            language: { type: "string", description: "Language: javascript or python" }
-          },
-          required: ["code"]
-        },
-        handler: async (args) => {
-          const code = String(args.code || "");
-          const language = String(args.language || "javascript");
-          return executeCodeSandbox(code, language);
-        }
-      },
-      notesTool: {
-        name: "notesTool",
-        description: "Manage personal notes: create, search, or view user notes.",
-        parameters: {
-          type: "object",
-          properties: {
-            action: { type: "string", description: "create, search, or list" },
-            title: { type: "string", description: "Note title" },
-            content: { type: "string", description: "Note markdown content" },
-            tags: { type: "array", items: { type: "string" } },
-            query: { type: "string", description: "Search keyword" }
-          },
-          required: ["action"]
-        },
-        handler: async (args) => {
-          const action = String(args.action);
-          if (action === "create") {
-            const title = String(args.title || "Untitled Note");
-            const content = String(args.content || "");
-            const tags = Array.isArray(args.tags) ? args.tags : [];
-            const note = db.addNote({ title, content, tags, pinned: false });
-            return { success: true, message: `Note "${note.title}" created.`, note };
-          } else if (action === "search") {
-            const q = String(args.query || "").toLowerCase();
-            const allNotes = db.getNotes();
-            const filtered = allNotes.filter(
-              (n) => n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q)
-            );
-            return { matches: filtered };
-          } else {
-            return { notes: db.getNotes().slice(0, 5) };
-          }
-        }
-      },
-      tasksTool: {
-        name: "tasksTool",
-        description: "Manage personal tasks: add, complete, or list user tasks.",
-        parameters: {
-          type: "object",
-          properties: {
-            action: { type: "string", description: "add, complete, or list" },
-            title: { type: "string", description: "Task title" },
-            priority: { type: "string", description: "urgent, high, medium, low" },
-            category: { type: "string", description: "coding, learning, work, personal, research" },
-            taskId: { type: "string", description: "Task ID for completing" }
-          },
-          required: ["action"]
-        },
-        handler: async (args) => {
-          const action = String(args.action);
-          if (action === "add") {
-            const title = String(args.title || "New Task");
-            const priority = args.priority || "medium";
-            const category = args.category || "work";
-            const task = db.addTask({
-              title,
-              priority,
-              category,
-              completed: false
-            });
-            return { success: true, message: `Task "${task.title}" added with ${priority} priority.`, task };
-          } else if (action === "complete") {
-            const id = String(args.taskId || "");
-            const updated = db.updateTask(id, { completed: true });
-            return { success: !!updated, message: updated ? `Task marked completed.` : "Task not found" };
-          } else {
-            return { pendingTasks: db.getTasks().filter((t) => !t.completed) };
-          }
-        }
-      },
-      conversationSearch: {
-        name: "conversationSearch",
-        description: "Search message history across previous conversations.",
-        parameters: {
-          type: "object",
-          properties: {
-            query: { type: "string", description: "Text or topic to look for in chat history" }
-          },
-          required: ["query"]
-        },
-        handler: async (args) => {
-          const q = String(args.query || "").toLowerCase();
-          const convs = db.getConversations();
-          const matchedConvs = convs.filter(
-            (c) => c.title.toLowerCase().includes(q) || c.lastMessagePreview && c.lastMessagePreview.toLowerCase().includes(q)
-          );
-          return { matchesCount: matchedConvs.length, conversations: matchedConvs };
-        }
-      }
-    };
-  }
-});
+
+// server/ai.ts
+import { GoogleGenAI } from "@google/genai";
 
 // server/knowledge.ts
 function generateSynthesizedResponse(prompt, systemPrompt = "") {
   const p = prompt.trim();
   const lower = p.toLowerCase();
+  if (/^(hi|hello|hey|ho|greetings|good morning|good afternoon|good evening|yo)\b/i.test(p)) {
+    return `Hello! \u{1F44B} I'm **MITALL**, your personal intelligence assistant.
+
+How can I help you today? I'm ready to assist with:
+- **Coding & Algorithms**: Python, TypeScript/JavaScript, C++, SQL, debugging, and optimizations (e.g. Fibonacci, Linked Lists, Trees).
+- **Mathematics & Science**: Formulas, derivations, step-by-step problem solving, and analysis.
+- **Architecture & System Design**: Full-stack design, cloud deployment, and performance tuning.
+- **Creative Writing & Product**: Documentation, brainstorming, and technical insights.
+
+What would you like to work on?`;
+  }
+  if (/who are you|what can you do|what is mitall|introduce yourself/i.test(lower)) {
+    return `I am **MITALL** (Personal Intelligence), an advanced general-purpose AI assistant designed to provide accurate explanations, production-ready code, and step-by-step problem solving across computer science, engineering, mathematics, and everyday topics.
+
+You can ask me to write code, solve algorithms (like Fibonacci, Graph traversal, Sorting), explain complex topics, or brainstorm ideas!`;
+  }
   if (lower.includes("fibonacci") || lower.includes("fibonaci") || lower.includes("fib serie") || lower.includes("fibonacci series")) {
     return `### Fibonacci Series Implementation
 
@@ -1942,13 +1936,8 @@ Here is a direct, detailed answer:
    - You can run code directly inside MITALL's **Coding Studio** by clicking "Run Sandbox".
    - Feel free to ask for a specific programming language implementation (Python, TypeScript, C++, Java), mathematical proof, or deeper exploration!`;
 }
-var init_knowledge = __esm({
-  "server/knowledge.ts"() {
-  }
-});
 
 // server/ai.ts
-import { GoogleGenAI } from "@google/genai";
 function getGeminiClient(customApiKey) {
   const settings = db.getSettings();
   const key = customApiKey?.trim() || settings?.geminiApiKey?.trim() || process.env.GEMINI_API_KEY?.trim() || "";
@@ -2092,8 +2081,10 @@ async function* streamGemini(systemPrompt, history, newMessage, modelName = "gem
   }
   contents.push({ role: "user", parts: [{ text: newMessage }] });
   const candidateModels = Array.from(/* @__PURE__ */ new Set([
-    modelName || "gemini-3.8-flash",
-    "gemini-3.1-flash-lite"
+    modelName || "gemini-2.5-flash",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-2.5-flash-lite"
   ]));
   let streamedAny = false;
   let lastError = null;
@@ -2340,14 +2331,6 @@ async function checkProviderHealth(provider, config) {
   }
   return { available: false, message: "Unknown provider", model: "" };
 }
-var init_ai = __esm({
-  "server/ai.ts"() {
-    init_db();
-    init_rag();
-    init_tools();
-    init_knowledge();
-  }
-});
 
 // server/live.ts
 import { WebSocketServer, WebSocket } from "ws";
@@ -2525,340 +2508,312 @@ Keep spoken responses punchy, direct, and conversational unless the user asks fo
   });
   return wss;
 }
-var init_live = __esm({
-  "server/live.ts"() {
-    init_db();
+
+// server.ts
+dotenv.config();
+var app = express();
+var isProd = process.env.NODE_ENV === "production";
+var PORT = isProd ? process.env.PORT || 3e3 : 3e3;
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.get("/api/health", async (_req, res) => {
+  const settings = db.getSettings();
+  console.log("[HEALTH CHECK] GEMINI_API_KEY present:", !!process.env.GEMINI_API_KEY, "length:", (process.env.GEMINI_API_KEY || "").length);
+  const gemini = await checkProviderHealth("gemini", settings);
+  const ollama = await checkProviderHealth("ollama", settings);
+  const openai = await checkProviderHealth("openai_compatible", settings);
+  res.json({
+    status: "ok",
+    version: "1.0.0",
+    app: "MITALL Personal Intelligence",
+    activeProvider: settings.activeProvider,
+    providers: { gemini, ollama, openai }
+  });
+});
+app.get("/api/settings", (_req, res) => {
+  res.json(db.getSettings());
+});
+app.post("/api/settings", (req, res) => {
+  const updated = db.updateSettings(req.body);
+  res.json(updated);
+});
+app.post("/api/settings/test-connection", async (req, res) => {
+  const { provider, ...config } = req.body;
+  const result = await checkProviderHealth(provider || "gemini", config);
+  res.json(result);
+});
+app.get("/api/conversations", (_req, res) => {
+  res.json(db.getConversations());
+});
+app.post("/api/conversations", (req, res) => {
+  const { title } = req.body;
+  const conv = db.createConversation(title);
+  res.json(conv);
+});
+app.patch("/api/conversations/:id", (req, res) => {
+  const updated = db.updateConversation(req.params.id, req.body);
+  if (!updated) return res.status(404).json({ error: "Conversation not found" });
+  res.json(updated);
+});
+app.delete("/api/conversations/:id", (req, res) => {
+  const deleted = db.deleteConversation(req.params.id);
+  res.json({ success: deleted });
+});
+app.get("/api/conversations/:id/messages", (req, res) => {
+  const messages = db.getMessages(req.params.id);
+  res.json(messages);
+});
+app.post("/api/conversations/:id/messages", (req, res) => {
+  const { role, content, attachments, toolInvocations, sources, modelUsed } = req.body;
+  const msg = db.addMessage({
+    conversationId: req.params.id,
+    role: role || "user",
+    content: content || "",
+    attachments,
+    toolInvocations,
+    sources,
+    modelUsed
+  });
+  res.json(msg);
+});
+app.delete("/api/messages/:id", (req, res) => {
+  const deleted = db.deleteMessage(req.params.id);
+  res.json({ success: deleted });
+});
+app.get("/api/chat/stream", async (req, res) => {
+  const conversationId = String(req.query.conversationId || "");
+  const prompt = String(req.query.prompt || "");
+  if (!conversationId || !prompt) {
+    return res.status(400).json({ error: "conversationId and prompt are required" });
+  }
+  let conv = db.getConversation(conversationId);
+  if (!conv) {
+    conv = db.createConversation();
+  }
+  db.addMessage({
+    conversationId,
+    role: "user",
+    content: prompt
+  });
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+  let fullAiText = "";
+  let collectedTools = [];
+  let collectedSources = [];
+  let collectedMemory;
+  const settings = db.getSettings();
+  try {
+    const stream = streamAIResponse(conversationId, prompt);
+    for await (const data of stream) {
+      if (data.toolInvocations) {
+        collectedTools = data.toolInvocations;
+        res.write(`data: ${JSON.stringify({ type: "tools", tools: collectedTools })}
+
+`);
+        res.flush?.();
+      }
+      if (data.memorySaved) {
+        collectedMemory = data.memorySaved;
+        res.write(`data: ${JSON.stringify({ type: "memory", memory: collectedMemory })}
+
+`);
+        res.flush?.();
+      }
+      if (data.sources) {
+        collectedSources = data.sources;
+        res.write(`data: ${JSON.stringify({ type: "sources", sources: collectedSources })}
+
+`);
+        res.flush?.();
+      }
+      if (data.chunk) {
+        fullAiText += data.chunk;
+        res.write(`data: ${JSON.stringify({ type: "chunk", text: data.chunk })}
+
+`);
+        res.flush?.();
+      }
+    }
+    const finalMsg = db.addMessage({
+      conversationId,
+      role: "assistant",
+      content: fullAiText,
+      toolInvocations: collectedTools.length > 0 ? collectedTools : void 0,
+      sources: collectedSources.length > 0 ? collectedSources : void 0,
+      memoryUpdates: collectedMemory ? [collectedMemory] : void 0,
+      modelUsed: settings.activeProvider === "gemini" ? settings.geminiModel : settings.activeProvider === "ollama" ? settings.ollamaModel : settings.openaiModel
+    });
+    res.write(`data: ${JSON.stringify({ type: "done", message: finalMsg, conversation: db.getConversation(conversationId) })}
+
+`);
+    res.end();
+  } catch (err) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    res.write(`data: ${JSON.stringify({ type: "error", error: errorMsg })}
+
+`);
+    res.end();
   }
 });
-
-// server/serverApp.ts
-var serverApp_exports = {};
-__export(serverApp_exports, {
-  app: () => app,
-  default: () => serverApp_default,
-  startServer: () => startServer
+app.get("/api/memories", (_req, res) => {
+  res.json(db.getMemories());
 });
-import express from "express";
-import http from "http";
-import dotenv from "dotenv";
-import path3 from "path";
-import fs3 from "fs";
+app.post("/api/memories", (req, res) => {
+  const { content, category } = req.body;
+  if (!content) return res.status(400).json({ error: "content is required" });
+  const mem = db.addMemory(content, category);
+  res.json(mem);
+});
+app.patch("/api/memories/:id", (req, res) => {
+  const updated = db.updateMemory(req.params.id, req.body);
+  if (!updated) return res.status(404).json({ error: "Memory not found" });
+  res.json(updated);
+});
+app.delete("/api/memories/:id", (req, res) => {
+  const deleted = db.deleteMemory(req.params.id);
+  res.json({ success: deleted });
+});
+app.get("/api/documents", (_req, res) => {
+  res.json(db.getDocuments());
+});
+app.post("/api/documents", (req, res) => {
+  const { filename, content, tags } = req.body;
+  if (!filename || content === void 0) {
+    return res.status(400).json({ error: "filename and content are required" });
+  }
+  const { title, text, fileType } = parseUploadedContent(filename, String(content));
+  const rawChunks = chunkText(text);
+  const docId = `doc-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+  const documentChunks = rawChunks.map((c, i) => ({
+    id: `chunk-${docId}-${i}`,
+    docId,
+    content: c,
+    chunkIndex: i
+  }));
+  const doc = {
+    id: docId,
+    title,
+    fileType,
+    fileSize: Buffer.byteLength(content, "utf-8"),
+    uploadedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    chunkCount: documentChunks.length,
+    charCount: text.length,
+    tags: Array.isArray(tags) ? tags : [fileType.toUpperCase()]
+  };
+  db.addDocument(doc, documentChunks);
+  res.json({ success: true, document: doc });
+});
+app.delete("/api/documents/:id", (req, res) => {
+  const deleted = db.deleteDocument(req.params.id);
+  res.json({ success: deleted });
+});
+app.post("/api/documents/search", (req, res) => {
+  const { query, topK } = req.body;
+  const results = searchKnowledgeBase(query || "", topK || 3);
+  res.json(results);
+});
+app.get("/api/tasks", (_req, res) => {
+  res.json(db.getTasks());
+});
+app.post("/api/tasks", (req, res) => {
+  const task = db.addTask(req.body);
+  res.json(task);
+});
+app.patch("/api/tasks/:id", (req, res) => {
+  const updated = db.updateTask(req.params.id, req.body);
+  if (!updated) return res.status(404).json({ error: "Task not found" });
+  res.json(updated);
+});
+app.delete("/api/tasks/:id", (req, res) => {
+  const deleted = db.deleteTask(req.params.id);
+  res.json({ success: deleted });
+});
+app.get("/api/notes", (_req, res) => {
+  res.json(db.getNotes());
+});
+app.post("/api/notes", (req, res) => {
+  const note = db.addNote(req.body);
+  res.json(note);
+});
+app.patch("/api/notes/:id", (req, res) => {
+  const updated = db.updateNote(req.params.id, req.body);
+  if (!updated) return res.status(404).json({ error: "Note not found" });
+  res.json(updated);
+});
+app.delete("/api/notes/:id", (req, res) => {
+  const deleted = db.deleteNote(req.params.id);
+  res.json({ success: deleted });
+});
+app.get("/api/tools", (_req, res) => {
+  const tools = Object.values(toolRegistry).map((t) => ({
+    name: t.name,
+    description: t.description,
+    parameters: t.parameters
+  }));
+  res.json(tools);
+});
+app.post("/api/tools/execute", async (req, res) => {
+  const { name, input } = req.body;
+  const result = await executeTool(name, input || {});
+  res.json(result);
+});
+app.post("/api/code/run", async (req, res) => {
+  const { code, language } = req.body;
+  const result = await executeCodeSandbox(code || "", language || "javascript");
+  res.json(result);
+});
+app.get("/api/export", (_req, res) => {
+  res.setHeader("Content-Disposition", 'attachment; filename="mitall_data_export.json"');
+  res.setHeader("Content-Type", "application/json");
+  res.json(db.exportAll());
+});
+app.post("/api/clear-all", (_req, res) => {
+  db.clearAllData();
+  res.json({ success: true, message: "All personal data reset to defaults." });
+});
 async function startServer() {
-  const isProd = process.env.NODE_ENV === "production";
-  const distPath = path3.resolve(process.cwd(), "dist");
-  if (fs3.existsSync(distPath)) {
-    app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path3.join(distPath, "index.html"));
-    });
-  } else if (!isProd) {
+  if (!isProd) {
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa"
     });
     app.use(vite.middlewares);
+  } else {
+    const distPath = path3.resolve(process.cwd(), "dist");
+    if (fs3.existsSync(distPath)) {
+      app.use(express.static(distPath));
+      app.get("*", (_req, res) => {
+        res.sendFile(path3.join(distPath, "index.html"));
+      });
+    }
   }
   const server = http.createServer(app);
   setupLiveAgentWebSocket(server);
   if (!process.env.VERCEL) {
     server.listen(Number(PORT), "0.0.0.0", () => {
-      console.log(`[MITALL Server & Live Agent] Running on http://0.0.0.0:${PORT}`);
+      console.log(`[MITALL Server & Live Agent] Running on http://0.0.0.0:${PORT} (dev port 3000)`);
     });
   }
   return { app, server };
 }
-var app, PORT, serverApp_default;
-var init_serverApp = __esm({
-  "server/serverApp.ts"() {
-    init_db();
-    init_rag();
-    init_tools();
-    init_ai();
-    init_live();
-    dotenv.config();
-    app = express();
-    PORT = process.env.PORT || 3e3;
-    app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-      if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-      }
-      next();
-    });
-    app.use(express.json({ limit: "50mb" }));
-    app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-    app.get("/api/health", async (_req, res) => {
-      const settings = db.getSettings();
-      console.log("[HEALTH CHECK] GEMINI_API_KEY present:", !!process.env.GEMINI_API_KEY, "length:", (process.env.GEMINI_API_KEY || "").length);
-      const gemini = await checkProviderHealth("gemini", settings);
-      const ollama = await checkProviderHealth("ollama", settings);
-      const openai = await checkProviderHealth("openai_compatible", settings);
-      res.json({
-        status: "ok",
-        version: "1.0.0",
-        app: "MITALL Personal Intelligence",
-        activeProvider: settings.activeProvider,
-        providers: { gemini, ollama, openai }
-      });
-    });
-    app.get("/api/settings", (_req, res) => {
-      res.json(db.getSettings());
-    });
-    app.post("/api/settings", (req, res) => {
-      const updated = db.updateSettings(req.body);
-      res.json(updated);
-    });
-    app.post("/api/settings/test-connection", async (req, res) => {
-      const { provider, ...config } = req.body;
-      const result = await checkProviderHealth(provider || "gemini", config);
-      res.json(result);
-    });
-    app.get("/api/conversations", (_req, res) => {
-      res.json(db.getConversations());
-    });
-    app.post("/api/conversations", (req, res) => {
-      const { title } = req.body;
-      const conv = db.createConversation(title);
-      res.json(conv);
-    });
-    app.patch("/api/conversations/:id", (req, res) => {
-      const updated = db.updateConversation(req.params.id, req.body);
-      if (!updated) return res.status(404).json({ error: "Conversation not found" });
-      res.json(updated);
-    });
-    app.delete("/api/conversations/:id", (req, res) => {
-      const deleted = db.deleteConversation(req.params.id);
-      res.json({ success: deleted });
-    });
-    app.get("/api/conversations/:id/messages", (req, res) => {
-      const messages = db.getMessages(req.params.id);
-      res.json(messages);
-    });
-    app.post("/api/conversations/:id/messages", (req, res) => {
-      const { role, content, attachments, toolInvocations, sources, modelUsed } = req.body;
-      const msg = db.addMessage({
-        conversationId: req.params.id,
-        role: role || "user",
-        content: content || "",
-        attachments,
-        toolInvocations,
-        sources,
-        modelUsed
-      });
-      res.json(msg);
-    });
-    app.delete("/api/messages/:id", (req, res) => {
-      const deleted = db.deleteMessage(req.params.id);
-      res.json({ success: deleted });
-    });
-    app.get("/api/chat/stream", async (req, res) => {
-      const conversationId = String(req.query.conversationId || "");
-      const prompt = String(req.query.prompt || "");
-      if (!conversationId || !prompt) {
-        return res.status(400).json({ error: "conversationId and prompt are required" });
-      }
-      let conv = db.getConversation(conversationId);
-      if (!conv) {
-        conv = db.createConversation();
-      }
-      db.addMessage({
-        conversationId,
-        role: "user",
-        content: prompt
-      });
-      res.setHeader("Content-Type", "text/event-stream");
-      res.setHeader("Cache-Control", "no-cache");
-      res.setHeader("Connection", "keep-alive");
-      res.flushHeaders?.();
-      let fullAiText = "";
-      let collectedTools = [];
-      let collectedSources = [];
-      let collectedMemory;
-      const settings = db.getSettings();
-      try {
-        const stream = streamAIResponse(conversationId, prompt);
-        for await (const data of stream) {
-          if (data.toolInvocations) {
-            collectedTools = data.toolInvocations;
-            res.write(`data: ${JSON.stringify({ type: "tools", tools: collectedTools })}
-
-`);
-            res.flush?.();
-          }
-          if (data.memorySaved) {
-            collectedMemory = data.memorySaved;
-            res.write(`data: ${JSON.stringify({ type: "memory", memory: collectedMemory })}
-
-`);
-            res.flush?.();
-          }
-          if (data.sources) {
-            collectedSources = data.sources;
-            res.write(`data: ${JSON.stringify({ type: "sources", sources: collectedSources })}
-
-`);
-            res.flush?.();
-          }
-          if (data.chunk) {
-            fullAiText += data.chunk;
-            res.write(`data: ${JSON.stringify({ type: "chunk", text: data.chunk })}
-
-`);
-            res.flush?.();
-          }
-        }
-        const finalMsg = db.addMessage({
-          conversationId,
-          role: "assistant",
-          content: fullAiText,
-          toolInvocations: collectedTools.length > 0 ? collectedTools : void 0,
-          sources: collectedSources.length > 0 ? collectedSources : void 0,
-          memoryUpdates: collectedMemory ? [collectedMemory] : void 0,
-          modelUsed: settings.activeProvider === "gemini" ? settings.geminiModel : settings.activeProvider === "ollama" ? settings.ollamaModel : settings.openaiModel
-        });
-        res.write(`data: ${JSON.stringify({ type: "done", message: finalMsg, conversation: db.getConversation(conversationId) })}
-
-`);
-        res.end();
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : String(err);
-        res.write(`data: ${JSON.stringify({ type: "error", error: errorMsg })}
-
-`);
-        res.end();
-      }
-    });
-    app.get("/api/memories", (_req, res) => {
-      res.json(db.getMemories());
-    });
-    app.post("/api/memories", (req, res) => {
-      const { content, category } = req.body;
-      if (!content) return res.status(400).json({ error: "content is required" });
-      const mem = db.addMemory(content, category);
-      res.json(mem);
-    });
-    app.patch("/api/memories/:id", (req, res) => {
-      const updated = db.updateMemory(req.params.id, req.body);
-      if (!updated) return res.status(404).json({ error: "Memory not found" });
-      res.json(updated);
-    });
-    app.delete("/api/memories/:id", (req, res) => {
-      const deleted = db.deleteMemory(req.params.id);
-      res.json({ success: deleted });
-    });
-    app.get("/api/documents", (_req, res) => {
-      res.json(db.getDocuments());
-    });
-    app.post("/api/documents", (req, res) => {
-      const { filename, content, tags } = req.body;
-      if (!filename || content === void 0) {
-        return res.status(400).json({ error: "filename and content are required" });
-      }
-      const { title, text, fileType } = parseUploadedContent(filename, String(content));
-      const rawChunks = chunkText(text);
-      const docId = `doc-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-      const documentChunks = rawChunks.map((c, i) => ({
-        id: `chunk-${docId}-${i}`,
-        docId,
-        content: c,
-        chunkIndex: i
-      }));
-      const doc = {
-        id: docId,
-        title,
-        fileType,
-        fileSize: Buffer.byteLength(content, "utf-8"),
-        uploadedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        chunkCount: documentChunks.length,
-        charCount: text.length,
-        tags: Array.isArray(tags) ? tags : [fileType.toUpperCase()]
-      };
-      db.addDocument(doc, documentChunks);
-      res.json({ success: true, document: doc });
-    });
-    app.delete("/api/documents/:id", (req, res) => {
-      const deleted = db.deleteDocument(req.params.id);
-      res.json({ success: deleted });
-    });
-    app.post("/api/documents/search", (req, res) => {
-      const { query, topK } = req.body;
-      const results = searchKnowledgeBase(query || "", topK || 3);
-      res.json(results);
-    });
-    app.get("/api/tasks", (_req, res) => {
-      res.json(db.getTasks());
-    });
-    app.post("/api/tasks", (req, res) => {
-      const task = db.addTask(req.body);
-      res.json(task);
-    });
-    app.patch("/api/tasks/:id", (req, res) => {
-      const updated = db.updateTask(req.params.id, req.body);
-      if (!updated) return res.status(404).json({ error: "Task not found" });
-      res.json(updated);
-    });
-    app.delete("/api/tasks/:id", (req, res) => {
-      const deleted = db.deleteTask(req.params.id);
-      res.json({ success: deleted });
-    });
-    app.get("/api/notes", (_req, res) => {
-      res.json(db.getNotes());
-    });
-    app.post("/api/notes", (req, res) => {
-      const note = db.addNote(req.body);
-      res.json(note);
-    });
-    app.patch("/api/notes/:id", (req, res) => {
-      const updated = db.updateNote(req.params.id, req.body);
-      if (!updated) return res.status(404).json({ error: "Note not found" });
-      res.json(updated);
-    });
-    app.delete("/api/notes/:id", (req, res) => {
-      const deleted = db.deleteNote(req.params.id);
-      res.json({ success: deleted });
-    });
-    app.get("/api/tools", (_req, res) => {
-      const tools = Object.values(toolRegistry).map((t) => ({
-        name: t.name,
-        description: t.description,
-        parameters: t.parameters
-      }));
-      res.json(tools);
-    });
-    app.post("/api/tools/execute", async (req, res) => {
-      const { name, input } = req.body;
-      const result = await executeTool(name, input || {});
-      res.json(result);
-    });
-    app.post("/api/code/run", async (req, res) => {
-      const { code, language } = req.body;
-      const result = await executeCodeSandbox(code || "", language || "javascript");
-      res.json(result);
-    });
-    app.get("/api/export", (_req, res) => {
-      res.setHeader("Content-Disposition", 'attachment; filename="mitall_data_export.json"');
-      res.setHeader("Content-Type", "application/json");
-      res.json(db.exportAll());
-    });
-    app.post("/api/clear-all", (_req, res) => {
-      db.clearAllData();
-      res.json({ success: true, message: "All personal data reset to defaults." });
-    });
-    serverApp_default = app;
-  }
-});
-
-// server.ts
-import "tsx";
-var { app: app2, startServer: startServer2 } = await Promise.resolve().then(() => (init_serverApp(), serverApp_exports));
 if (!process.env.VERCEL) {
-  await startServer2();
+  startServer();
 }
-var server_default = app2;
+var server_default = app;
 export {
-  app2 as app,
-  server_default as default
+  app,
+  server_default as default,
+  startServer
 };

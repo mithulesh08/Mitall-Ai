@@ -143,7 +143,7 @@ async function* streamGemini(
   systemPrompt: string,
   history: ChatMessage[],
   newMessage: string,
-  modelName: string = 'gemini-3.8-flash',
+  modelName: string = 'gemini-4-hydrogen',
   customApiKey?: string
 ): AsyncGenerator<string> {
   const apiKey = customApiKey?.trim() || process.env.GEMINI_API_KEY?.trim() || '';
@@ -179,9 +179,16 @@ async function* streamGemini(
 
   contents.push({ role: 'user', parts: [{ text: newMessage }] });
 
+  // Normalize deprecated/legacy model aliases to active valid models
+  const normalizedModel =
+    !modelName || modelName === 'gemini-3.8-flash' || modelName.startsWith('gemini-2.') || modelName.startsWith('gemini-1.')
+      ? 'gemini-4-hydrogen'
+      : modelName;
+
   // Candidate models to try in case of transient 503 high-demand spike (valid active models only)
   const candidateModels = Array.from(new Set([
-    modelName || 'gemini-3.8-flash',
+    normalizedModel,
+    'gemini-4-hydrogen',
     'gemini-3.1-flash-lite',
   ]));
 
@@ -218,6 +225,7 @@ async function* streamGemini(
       } catch (err: unknown) {
         lastError = err instanceof Error ? err : new Error(String(err));
         const rawMsg = lastError.message || String(lastError);
+        console.warn(`[MITALL Gemini] Model '${candidate}' attempt ${attempt + 1} failed:`, rawMsg.slice(0, 220));
         const is503 = rawMsg.includes('503') || rawMsg.includes('UNAVAILABLE') || rawMsg.includes('high demand');
 
         if (is503 && attempt === 0) {
@@ -469,7 +477,7 @@ export async function* streamAIResponse(
     stream = streamOpenAI(systemPrompt, history, augmentedPrompt, settings.openaiEndpoint, settings.openaiModel, settings.openaiApiKey);
   } else {
     // Default: Gemini
-    const model = settings.geminiModel || 'gemini-3.8-flash';
+    const model = settings.geminiModel || 'gemini-4-hydrogen';
     stream = streamGemini(systemPrompt, history, augmentedPrompt, model, settings.geminiApiKey);
   }
 
@@ -483,9 +491,9 @@ export async function checkProviderHealth(provider: string, config?: Partial<Use
   if (provider === 'gemini') {
     const hasKey = !!(config?.geminiApiKey?.trim() || process.env.GEMINI_API_KEY?.trim());
     if (!hasKey) {
-      return { available: false, message: 'GEMINI_API_KEY is not configured in server environment or settings.', model: 'gemini-3.8-flash' };
+      return { available: false, message: 'GEMINI_API_KEY is not configured in server environment or settings.', model: 'gemini-4-hydrogen' };
     }
-    return { available: true, message: 'Google Gemini AI is configured and ready.', model: config?.geminiModel || 'gemini-3.8-flash' };
+    return { available: true, message: 'Google Gemini AI is configured and ready.', model: config?.geminiModel || 'gemini-4-hydrogen' };
   } else if (provider === 'ollama') {
     const endpoint = config?.ollamaEndpoint || 'http://127.0.0.1:11434';
     try {

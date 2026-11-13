@@ -8,6 +8,26 @@ export function generateClientFallback(prompt: string): string {
   const p = prompt.trim();
   const lower = p.toLowerCase();
 
+  // 0. GREETINGS & INTRODUCTIONS
+  if (/^(hi|hello|hey|ho|greetings|good morning|good afternoon|good evening|yo)\b/i.test(p)) {
+    return `Hello! 👋 I'm **MITALL**, your personal intelligence assistant.
+
+How can I help you today? I'm ready to assist with:
+- **Coding & Algorithms**: Python, TypeScript/JavaScript, C++, SQL, debugging, and optimizations (e.g. Fibonacci, Linked Lists, Trees).
+- **Mathematics & Science**: Formulas, derivations, step-by-step problem solving, and analysis.
+- **Architecture & System Design**: Full-stack design, cloud deployment, and performance tuning.
+- **Creative Writing & Product**: Documentation, brainstorming, and technical insights.
+
+What would you like to work on?`;
+  }
+
+  // 0.1 WHO ARE YOU / CAPABILITIES
+  if (/who are you|what can you do|what is mitall|introduce yourself/i.test(lower)) {
+    return `I am **MITALL** (Personal Intelligence), an advanced general-purpose AI assistant designed to provide accurate explanations, production-ready code, and step-by-step problem solving across computer science, engineering, mathematics, and everyday topics.
+
+You can ask me to write code, solve algorithms (like Fibonacci, Graph traversal, Sorting), explain complex topics, or brainstorm ideas!`;
+  }
+
   // 1. FIBONACCI SERIES / NUMBERS
   if (lower.includes('fibonacci') || lower.includes('fibonaci') || lower.includes('fib serie') || lower.includes('fibonacci series')) {
     return `### Fibonacci Series Implementation
@@ -377,25 +397,18 @@ I am ready to help you across all areas:
 What would you like to explore or solve right now?`;
   }
 
-  // 8. GENERAL KNOWLEDGE BREAKDOWN
-  return `### ${p.charAt(0).toUpperCase() + p.slice(1)}
+  // 8. CORE DEV CONCEPTS (e.g. Git, Docker, API)
+  if (/\bgit\b/i.test(lower)) {
+    return `### What is Git?
 
-Here is a structured explanation of this topic:
+**Git** is a distributed version control system used to track changes in source code, collaborate with teams, and manage project history safely.
 
-1. **Definition & Core Concept**:
-   This concept represents a fundamental pattern. Examining it from first principles clarifies the underlying mechanics and trade-offs.
+- **Snapshots & Commits:** Every \`git commit\` saves a traceable snapshot of your files.
+- **Branching & Merging:** Work on features in isolated branches (\`git checkout -b feature\`) before merging into \`main\`.
+- **Common Commands:** \`git status\`, \`git add .\`, \`git commit -m "..."\`, \`git pull\`, \`git push\`.`;
+  }
 
-2. **Key Principles & Mechanisms**:
-   - **Structure**: Clear separation of concerns and well-defined invariants.
-   - **Performance**: Minimizing redundant computation and controlling memory allocation.
-   - **Robustness**: Handling edge cases, empty states, and scale boundaries gracefully.
-
-3. **Practical Implementation**:
-   - Formulate the problem with precise input/output constraints.
-   - Select the most appropriate algorithm or architectural pattern.
-   - Verify correctness with unit tests and representative benchmarks.
-
-If you would like a code sample in Python, TypeScript, or C++, or a detailed walkthrough of any specific aspect, please let me know!`;
+  return `Unable to reach the cloud AI provider for **"${p}"**. Please verify your connection or configure your AI provider in **Settings → AI Provider & Models**.`;
 }
 
 /**
@@ -407,7 +420,7 @@ export async function streamDirectGeminiClient(
   onChunk: (text: string) => void,
   signal?: AbortSignal
 ): Promise<string> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:streamGenerateContent?alt=sse&key=${apiKey}`;
   
   const res = await fetch(url, {
     method: 'POST',

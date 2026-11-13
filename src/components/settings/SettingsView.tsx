@@ -176,9 +176,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     onChange={(e) => setFormData({ ...formData, geminiModel: e.target.value })}
                     className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
-                    <option value="gemini-3.8-flash">mitall-3.8-flash (Fast, smart, balanced - Default)</option>
-                    <option value="gemini-4-argon">mitall-4-argon (Complex reasoning & math)</option>
+                    <option value="gemini-4-hydrogen">mitall-4-hydrogen (Fast, smart, balanced - Default)</option>
                     <option value="gemini-3.1-flash-lite">mitall-3.1-flash-lite (Ultra low latency)</option>
+                    <option value="gemini-4-argon">mitall-4-argon (Complex reasoning & math)</option>
                   </select>
                 </div>
 

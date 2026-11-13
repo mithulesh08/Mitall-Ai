@@ -21,6 +21,8 @@ import {
   X,
   Clock,
   Check,
+  Home,
+  User,
 } from 'lucide-react';
 import { Conversation, UserSettings } from '../../types/index';
 import { groupConversationsByDate } from '../../utils/dateGrouping';
@@ -84,12 +86,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const toolNavItems = [
+    { id: 'home', label: 'Home Overview', icon: <Home className="w-3.5 h-3.5" /> },
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
     { id: 'coding', label: 'Coding Studio', icon: <Code2 className="w-3.5 h-3.5" /> },
     { id: 'memory', label: 'Long-Term Memory', icon: <Brain className="w-3.5 h-3.5" />, count: counts.memories },
     { id: 'knowledge', label: 'Knowledge Base', icon: <FileText className="w-3.5 h-3.5" />, count: counts.documents },
     { id: 'tasks', label: 'Tasks & Reminders', icon: <ListTodo className="w-3.5 h-3.5" />, count: counts.tasks },
     { id: 'notes', label: 'Notes & PKM', icon: <StickyNote className="w-3.5 h-3.5" /> },
+    { id: 'profile', label: 'Profile & Sync', icon: <User className="w-3.5 h-3.5" /> },
     { id: 'settings', label: 'Settings', icon: <Settings className="w-3.5 h-3.5" /> },
   ];
 

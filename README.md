@@ -86,28 +86,95 @@ Visit `http://localhost:3000` to interact with MITALL.
 
 ---
 
-## 🏗️ Architecture
+## 📱 Android Native Application (Capacitor)
+
+MITALL is fully configured as a native Android app sharing the exact same frontend, database, AI orchestrator, and real-time synchronization.
+
+- **Application Name**: `MITALL`
+- **Package ID**: `com.mitall.app`
+- **Native Directory**: `/android`
+
+### Building Android APK & AAB
+
+1. **Prerequisites**: Install Android Studio with Android SDK (API 34+).
+2. **Build Web Assets & Sync with Capacitor**:
+   ```bash
+   npm run build:android
+   ```
+3. **Compile Native Android APK (Command Line)**:
+   ```bash
+   # Linux / macOS
+   chmod +x ./scripts/build_android.sh && ./scripts/build_android.sh
+
+   # Windows
+   .\scripts\build_android.bat
+   ```
+4. **Compile in Android Studio**:
+   ```bash
+   npx cap open android
+   ```
+   In Android Studio, click **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+
+### Output Artifacts:
+- **Debug APK**: `android/app/build/outputs/apk/debug/app-debug.apk`
+- **Release AAB (Google Play)**: `android/app/build/outputs/bundle/release/app-release.aab`
+
+---
+
+## ☁️ Production Cloud Deployment
+
+### 1. Google Cloud Run / Docker
+```bash
+# Build and run with Docker Compose
+docker compose up -d --build
+```
+Or deploy directly to Cloud Run:
+```bash
+gcloud run deploy mitall-ai --source . --port 3000 --allow-unauthenticated
+```
+
+### 2. Vercel Deployment
+The repository includes `vercel.json` and `/api/index.ts` pre-configured for Vercel Serverless Functions:
+- Deploy via Vercel CLI: `vercel --prod`
+- Environment Variables: Set `GEMINI_API_KEY` in Vercel Project Settings -> **Environment Variables**.
+- Or use in-app API key configuration under **Settings > AI Provider & Models**.
+
+---
+
+## 🏗️ Universal Platform Architecture
 
 ```
 MITALL Architecture
-├── Frontend (React 19, TypeScript, Tailwind CSS, Lucide icons, Motion)
-│   ├── Chat Workspace (Streaming SSE, Markdown & Code syntax highlighting)
+├── Website Frontend (React 19, TypeScript, Tailwind CSS, Lucide icons, Motion)
+│   ├── Home View (Platform overview, prompt starters, module quick-nav)
+│   ├── Chat Workspace (Streaming SSE, Markdown & syntax highlighting)
+│   ├── Live Agent View (Full duplex voice & video assistant)
 │   ├── Productivity Dashboard (Metrics, quick actions, today's tasks)
 │   ├── Long-Term Memory (Structured records & category filters)
 │   ├── Knowledge Base (Chunking, RAG semantic search, document preview)
 │   ├── Coding Studio (Dual-pane editor, Big-O analyzer, safe runner)
 │   ├── Task Manager (Priorities, due dates, in-app reminders)
-│   └── Notes & PKM (Markdown notes, tags, AI summarization)
+│   ├── Notes & PKM (Markdown notes, tags, AI summarization)
+│   ├── Profile & Sync (User credentials, cross-platform synchronization)
+│   └── Settings (Model switches, API key management)
 │
-├── Server (Express 4 + Vite middleware dev server)
-│   ├── server.ts (Mounts REST API, SSE chat stream, and static assets)
-│   ├── server/ai.ts (Multi-provider engine: Gemini, Ollama, OpenAI)
+├── Android Native Layer (Capacitor 8)
+│   ├── Package ID: com.mitall.app
+│   ├── Native Hardware: Microphone, Camera, Haptics, Network monitor
+│   ├── Back Button navigation & Keyboard management
+│   └── AndroidManifest.xml (Permissions & Deep links)
+│
+├── Server & AI Orchestration (Express 4 + Node 22 / FastAPI Python)
+│   ├── server.ts / serverApp.ts (REST APIs, SSE streaming, Auth & Sync)
+│   ├── server/ai.ts (Multi-provider engine: Gemini 2.5/3.8, Ollama, OpenAI)
 │   ├── server/db.ts (Atomic persistent storage in data/mitall_db.json)
 │   ├── server/rag.ts (Text extraction, chunking, and similarity search)
-│   └── server/tools.ts (Calculator, DateTime, Web Search, Code Sandbox)
+│   ├── server/tools.ts (Calculator, DateTime, Web Search, Code Sandbox)
+│   └── backend/ (FastAPI Python implementation with SQLAlchemy & Pydantic)
 │
-└── Data & Scripts
-    ├── data/mitall_db.json (Persistent personal intelligence store)
-    ├── backend/ (Standalone FastAPI alternative implementation)
-    └── scripts/ (Windows setup.bat & start.bat)
+└── Automation Scripts & DevOps
+    ├── Dockerfile & docker-compose.yml (Multi-cloud containerization)
+    ├── scripts/build_android.sh & scripts/build_android.bat (APK/AAB builds)
+    └── vercel.json & capacitor.config.ts (Cloud & Mobile configs)
 ```
+

@@ -7,7 +7,7 @@
     "temperature": 0.7,
     "maxTokens": 4096,
     "activeProvider": "gemini",
-    "geminiModel": "gemini-3.8-flash",
+    "geminiModel": "gemini-4-hydrogen",
     "geminiApiKey": "",
     "ollamaEndpoint": "http://127.0.0.1:11434",
     "ollamaModel": "llama3.2",
@@ -22,6 +22,36 @@
     "technicalExplanationLevel": "intermediate"
   },
   "conversations": [
+    {
+      "id": "conv-1794557513267-3p10z",
+      "title": "New Conversation",
+      "createdAt": "2026-11-13T08:11:53.267Z",
+      "updatedAt": "2026-11-13T08:11:53.267Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794557503913-uxg6m",
+      "title": "New Conversation",
+      "createdAt": "2026-11-13T08:11:43.913Z",
+      "updatedAt": "2026-11-13T08:11:43.913Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
+    {
+      "id": "conv-1794557354655-cpe2e",
+      "title": "New Conversation",
+      "createdAt": "2026-11-13T08:09:14.655Z",
+      "updatedAt": "2026-11-13T08:09:14.655Z",
+      "isArchived": false,
+      "pinned": false,
+      "messagesCount": 0,
+      "lastMessagePreview": ""
+    },
     {
       "id": "conv-1794370096870-7kz01",
       "title": "New Conversation",
@@ -478,6 +508,51 @@
       "modelUsed": "gemini-3.8-flash",
       "id": "msg-1794370109376-211xe",
       "createdAt": "2026-11-11T04:08:29.376Z"
+    },
+    {
+      "conversationId": "test-diag",
+      "role": "user",
+      "content": "explain git",
+      "id": "msg-1794557354656-jsocy",
+      "createdAt": "2026-11-13T08:09:14.656Z"
+    },
+    {
+      "conversationId": "test-diag",
+      "role": "assistant",
+      "content": "### Explanation: Git\n\n**git** is an important concept that can be understood through its definition, underlying mechanisms, and real-world significance:\n\n1. **Definition & Overview**:\n   - At its core, git addresses specific computational, physical, or logical challenges by organizing information and defining deterministic rules.\n\n2. **Key Characteristics & Mechanisms**:\n   - **Modularity**: Allows systems to decompose complex behaviors into manageable sub-units.\n   - **Efficiency**: Designed to optimize resource utilization (such as computational latency, memory footprint, or energy).\n   - **Reliability**: Employs structured constraints to ensure predictable outcomes across edge cases.\n\n3. **Practical Applications**:\n   - Widely utilized across production software engineering, modern distributed systems, data processing pipelines, and scientific research.\n\nWould you like a code demonstration, historical background, or practical exercise on git?",
+      "modelUsed": "gemini-3.8-flash",
+      "id": "msg-1794557370175-lwe5v",
+      "createdAt": "2026-11-13T08:09:30.175Z"
+    },
+    {
+      "conversationId": "test-git-verify",
+      "role": "user",
+      "content": "explain git",
+      "id": "msg-1794557503914-bk74m",
+      "createdAt": "2026-11-13T08:11:43.914Z"
+    },
+    {
+      "conversationId": "test-git-verify",
+      "role": "assistant",
+      "content": "**Git** is a free, open-source **distributed version control system**. It tracks changes in your files (most commonly source code) over time, allowing you to save snapshots of your work, revert to older versions, and collaborate with others without overwriting each other's changes.\n\n---\n\n### Why Use Git?\n* **Complete History:** Every change is recorded with who made it, when, and why. You can undo mistakes or restore deleted code at any time.\n* **Safe Experimentation:** You can create isolated workspaces (\"branches\") to test new ideas without breaking the main, working version of your project.\n* **Collaboration:** Multiple people can work on the same project simultaneously and merge their work together cleanly.\n* **Offline & Distributed:** Every developer has a full copy of the project's history on their own computer, so most operations are fast and work offline.\n\n---\n\n### Core Concepts\n\n1. **Repository (Repo):** The project folder tracked by Git, containing all your files and the entire history of changes.\n2. **Working Directory, Staging Area, and Repository:**\n   * **Working Directory:** The files you are currently editing on your computer.\n   * **Staging Area:** A holding area where you select specific changes you want to include in your next save point.\n   * **Commit:** A permanent snapshot of the staged changes saved in Git's history, accompanied by a short descriptive message.\n3. **Branch:** An independent line of development. The default branch is usually called `main`. You might create a `feature-login` branch to build a new feature, keeping `main` stable.\n4. **Merge:** Combining changes from one branch back into another (e.g., merging `feature-login` into `main` once it's finished).\n5. **Remote:** A version of your repository hosted online (on platforms like **GitHub**, **GitLab**, or **Bitbucket**) used for backup and team collaboration.\n\n*(Note: **Git** is the tool installed on your computer; **GitHub** is a cloud website that hosts Git repositories.)*\n\n---\n\n### Basic Git Workflow & Common Commands\n\nHere is what a typical day-to-day workflow looks like:\n\n1. **Start a repo** (or download an existing one):\n   * `git init` — Turns the current folder into a new Git repository.\n   * `git clone <url>` — Downloads an existing repository from a remote server.\n2. **Check status:**\n   * `git status` — Shows which files have been modified, staged, or untracked.\n3. **Stage and save changes:**\n   * `git add <file>` (or `git add .` for all files) — Moves changes to the staging area.\n   * `git commit -m \"Describe your change\"` — Saves the staged snapshot to history.\n4. **Work with branches:**\n   * `git branch <name>` — Creates a new branch.\n   * `git checkout <name>` (or `git switch <name>`) — Switches to that branch.\n   * `git merge <name>` — Merges the specified branch into your current branch.\n5. **Sync with a remote repository:**\n   * `git pull` — Downloads and integrates new changes from the remote server.\n   * `git push` — Uploads your local commits to the remote server.\n\nIf you'd like, I can walk you through setting up your first repository or explain how branching and merge conflicts work in more detail.",
+      "modelUsed": "gemini-4-hydrogen",
+      "id": "msg-1794557513246-zgbci",
+      "createdAt": "2026-11-13T08:11:53.246Z"
+    },
+    {
+      "conversationId": "test-photo-verify",
+      "role": "user",
+      "content": "explain photosynthesis in simple terms",
+      "id": "msg-1794557513268-00cuw",
+      "createdAt": "2026-11-13T08:11:53.268Z"
+    },
+    {
+      "conversationId": "test-photo-verify",
+      "role": "assistant",
+      "content": "**Photosynthesis** is the process plants use to make their own food. Just like humans cook meals using ingredients and heat, plants \"cook\" their food using sunlight.\n\nHere is how it works in simple steps:\n\n### 1. The Ingredients\nA plant gathers three things:\n* **Sunlight:** Energy from the sun, absorbed by the leaves.\n* **Water:** Sucked up from the soil through the plant's roots.\n* **Carbon dioxide:** A gas in the air that enters through tiny pores in the leaves.\n\n### 2. The \"Kitchen\"\nInside the plant's leaves is a green substance called **chlorophyll** (this is what gives plants their green color). Chlorophyll traps the sunlight and uses its energy to combine the water and carbon dioxide.\n\n### 3. The Results\nThis chemical reaction creates two things:\n* **Sugar (glucose):** The plant uses this as food to grow and stay healthy.\n* **Oxygen:** The plant doesn't need all of it, so it releases oxygen back into the air—which is the exact gas humans and animals need to breathe.\n\n---\n\n**In short:**  \n**Sunlight + Water + Carbon Dioxide ➔ Plant Food (Sugar) + Oxygen**",
+      "modelUsed": "gemini-4-hydrogen",
+      "id": "msg-1794557521789-cl1qa",
+      "createdAt": "2026-11-13T08:12:01.789Z"
     }
   ],
   "memories": [
@@ -597,6 +672,18 @@
       "status": "success",
       "timestamp": "2026-11-09T12:00:41.580Z",
       "id": "tool-1794225641581-0os5l"
+    }
+  ],
+  "users": [
+    {
+      "id": "user-default",
+      "name": "Mithulesh Ganesan",
+      "email": "mithuleshganesan08@gmail.com",
+      "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+      "role": "admin",
+      "createdAt": "2026-11-13T08:08:59.105Z",
+      "lastLogin": "2026-11-13T08:08:59.105Z"
     }
   ]
 }

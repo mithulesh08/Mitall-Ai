@@ -8,7 +8,27 @@ export function generateSynthesizedResponse(prompt: string, systemPrompt: string
   const p = prompt.trim();
   const lower = p.toLowerCase();
 
-  // 0. FIBONACCI SEQUENCE & DYNAMIC PROGRAMMING
+  // 0. GREETINGS & INTRODUCTIONS
+  if (/^(hi|hello|hey|ho|greetings|good morning|good afternoon|good evening|yo)\b/i.test(p)) {
+    return `Hello! 👋 I'm **MITALL**, your personal intelligence assistant.
+
+How can I help you today? I'm ready to assist with:
+- **Coding & Algorithms**: Python, TypeScript/JavaScript, C++, SQL, debugging, and optimizations (e.g. Fibonacci, Linked Lists, Trees).
+- **Mathematics & Science**: Formulas, derivations, step-by-step problem solving, and analysis.
+- **Architecture & System Design**: Full-stack design, cloud deployment, and performance tuning.
+- **Creative Writing & Product**: Documentation, brainstorming, and technical insights.
+
+What would you like to work on?`;
+  }
+
+  // 0.1 WHO ARE YOU / CAPABILITIES
+  if (/who are you|what can you do|what is mitall|introduce yourself/i.test(lower)) {
+    return `I am **MITALL** (Personal Intelligence), an advanced general-purpose AI assistant designed to provide accurate explanations, production-ready code, and step-by-step problem solving across computer science, engineering, mathematics, and everyday topics.
+
+You can ask me to write code, solve algorithms (like Fibonacci, Graph traversal, Sorting), explain complex topics, or brainstorm ideas!`;
+  }
+
+  // 0.2 FIBONACCI SEQUENCE & DYNAMIC PROGRAMMING
   if (lower.includes('fibonacci') || lower.includes('fibonaci') || lower.includes('fib serie') || lower.includes('fibonacci series')) {
     return `### Fibonacci Series Implementation
 
@@ -663,79 +683,69 @@ print("Primes up to 50:", sieve_of_eratosthenes(50))
 \`\`\``;
   }
 
-  // 9. DYNAMIC INFORMATIVE SYNTHESIZER FOR GENERAL QUERIES
-  // (Provides direct, concrete answers, never the canned corporate template)
+  // 9. CORE SOFTWARE & DEV KNOWLEDGE (Git, GitHub, Docker, REST API, SQL, React, Python)
+  if (/\bgit\b/i.test(lower) && !lower.includes('github actions')) {
+    return `### What is Git?
+
+**Git** is a free, open-source **distributed version control system (DVCS)** created by Linus Torvalds in 2005 to track changes in source code and coordinate work among developers.
+
+#### How Git Works
+- **Snapshots & History:** Every commit saves a snapshot of your project files with a unique SHA hash, author, timestamp, and message.
+- **Distributed:** Every developer's local clone contains the full repository history, so committing, branching, and viewing logs work offline.
+- **Branching & Merging:** You can create isolated branches to build features or fix bugs safely without affecting \`main\`, then merge them back when ready.
+
+#### Essential Git Commands
+\`\`\`bash
+git init                  # Initialize a new repository
+git clone <url>           # Copy an existing remote repository
+git status                # Check modified and staged files
+git add .                 # Stage changes for the next commit
+git commit -m "message"   # Save a snapshot to history
+git branch <name>         # Create a new branch
+git checkout -b <name>    # Create and switch to a branch
+git pull                  # Fetch and merge changes from remote
+git push origin main      # Upload local commits to remote (e.g., GitHub)
+\`\`\``;
+  }
+
+  if (/\bdocker\b/i.test(lower)) {
+    return `### What is Docker?
+
+**Docker** is a containerization platform that packages an application together with its runtime, system libraries, and dependencies into a standardized unit called a **container**.
+
+- **Image:** A read-only blueprint built from a \`Dockerfile\`.
+- **Container:** A lightweight, isolated running instance of an image.
+- **Benefit:** Eliminates "it works on my machine" issues by guaranteeing the same environment in development, testing, and Cloud Run/VPS production.
+
+\`\`\`bash
+docker build -t my-app .
+docker run -p 3000:3000 my-app
+\`\`\``;
+  }
+
+  if (/\b(rest api|api|http)\b/i.test(lower)) {
+    return `### What is an API / REST API?
+
+An **API (Application Programming Interface)** defines how two software components communicate. A **REST API** uses standard HTTP methods over URLs (endpoints) to exchange data—typically in JSON format:
+
+- \`GET\` — Read data (e.g., \`GET /api/conversations\`)
+- \`POST\` — Create new resources or send actions (e.g., \`POST /api/chat\`)
+- \`PATCH\` / \`PUT\` — Update existing resources
+- \`DELETE\` — Remove resources`;
+  }
+
+  // 10. DIRECT FALLBACK WHEN CLOUD MODEL IS UNREACHABLE
   return generateDynamicDirectAnswer(p);
 }
 
 /**
- * Generates an articulate, substantive answer based on the user's prompt topic.
+ * Generates an honest, direct response when the external cloud AI model is unavailable.
  */
 function generateDynamicDirectAnswer(prompt: string): string {
   const p = prompt.trim();
-  const lower = p.toLowerCase();
+  const topic = p.replace(/^(?:what\s+is\s+(?:the\s+)?|explain\s+(?:the\s+)?|describe\s+(?:the\s+)?|tell\s+me\s+about\s+(?:the\s+)?)/i, '').replace(/[?.]+$/, '');
 
-  // If question starts with "how to" or "how do i"
-  if (/^how\s+(?:to|do|can)/i.test(lower)) {
-    return `### Guide: How to Approach "${p.replace(/^how\s+(?:to|do\s+i|can\s+i)\s+/i, '').replace(/[?.]+$/, '')}"
+  return `I could not reach the live Gemini cloud model for **"${topic || p}"** right now (check that \`GEMINI_API_KEY\` is configured in your environment or Settings → AI Provider & Models).
 
-Here is a step-by-step breakdown with best practices:
-
-1. **Core Understanding & Preparation**:
-   - Identify the goal and constraints of the problem.
-   - Establish initial requirements before jumping into implementation.
-
-2. **Step-by-Step Procedure**:
-   - **Step 1**: Set up your working environment or define the data types involved.
-   - **Step 2**: Implement the primary logic incrementally, testing simple cases first.
-   - **Step 3**: Handle boundary conditions (e.g., empty inputs, null pointers, zero values).
-   - **Step 4**: Verify efficiency in terms of time and space complexity.
-
-3. **Recommended Solution**:
-   - Write clean, modular, and self-documenting code or instructions.
-   - Separate concerns so each function or component handles one specific responsibility.
-
-If you have specific code, language constraints, or error logs, share them and I will adapt the solution immediately!`;
-  }
-
-  // If question asks "what is" or "explain"
-  if (/^(?:what\s+is|explain|describe|tell\s+me\s+about)/i.test(lower)) {
-    const topic = p.replace(/^(?:what\s+is\s+(?:the\s+)?|explain\s+(?:the\s+)?|describe\s+(?:the\s+)?|tell\s+me\s+about\s+(?:the\s+)?)/i, '').replace(/[?.]+$/, '');
-    return `### Explanation: ${topic.charAt(0).toUpperCase() + topic.slice(1)}
-
-**${topic}** is an important concept that can be understood through its definition, underlying mechanisms, and real-world significance:
-
-1. **Definition & Overview**:
-   - At its core, ${topic} addresses specific computational, physical, or logical challenges by organizing information and defining deterministic rules.
-
-2. **Key Characteristics & Mechanisms**:
-   - **Modularity**: Allows systems to decompose complex behaviors into manageable sub-units.
-   - **Efficiency**: Designed to optimize resource utilization (such as computational latency, memory footprint, or energy).
-   - **Reliability**: Employs structured constraints to ensure predictable outcomes across edge cases.
-
-3. **Practical Applications**:
-   - Widely utilized across production software engineering, modern distributed systems, data processing pipelines, and scientific research.
-
-Would you like a code demonstration, historical background, or practical exercise on ${topic}?`;
-  }
-
-  // Default clean substantive answer
-  return `### Analysis & Solution
-
-Regarding: **"${p.replace(/[?.]+$/, '')}"**
-
-Here is a direct, detailed answer:
-
-1. **Direct Answer & Key Principles**:
-   - When tackling this topic, the primary objective is to maintain clarity, accuracy, and optimal execution.
-   - Breaking the problem into deterministic, verifiable steps ensures that all assumptions and edge cases are addressed.
-
-2. **Implementation Strategy**:
-   - **Input Validation**: Always verify that the input parameters or problem preconditions are valid.
-   - **Algorithmic Selection**: Select standard, battle-tested algorithms with optimal $\\mathcal{O}(N)$ or $\\mathcal{O}(\\log N)$ complexity.
-   - **Modularity**: Isolate side effects and write self-contained logic that can be tested in isolation.
-
-3. **Next Actions**:
-   - You can run code directly inside MITALL's **Coding Studio** by clicking "Run Sandbox".
-   - Feel free to ask for a specific programming language implementation (Python, TypeScript, C++, Java), mathematical proof, or deeper exploration!`;
+Once connected to a live model (Gemini, Ollama, or OpenAI-compatible), MITALL answers any general knowledge, science, history, writing, or coding question directly in real time.`;
 }

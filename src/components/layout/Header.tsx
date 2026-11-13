@@ -10,6 +10,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { UserSettings } from '../../types/index';
+import { PWAInstallButton } from '../pwa/PWAInstallButton';
 
 interface HeaderProps {
   onToggleMobileMenu: () => void;
@@ -28,6 +29,10 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const getViewTitle = () => {
     switch (activeView) {
+      case 'home':
+        return 'MITALL Universal Intelligence';
+      case 'profile':
+        return 'User Profile & Cross-Platform Sync';
       case 'dashboard':
         return 'Personal Productivity Dashboard';
       case 'coding':
@@ -96,6 +101,9 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
 
+        {/* In-App PWA Install Button */}
+        <PWAInstallButton />
+
         {/* Live MITALL Agent Button */}
         {activeView !== 'live' ? (
           <button
@@ -127,6 +135,17 @@ export const Header: React.FC<HeaderProps> = ({
             <span>Chat</span>
           </button>
         )}
+
+        {/* Profile Avatar Button */}
+        <button
+          onClick={() => onNavigate('profile')}
+          className="p-1 rounded-full border border-slate-700 hover:border-indigo-500/60 transition-colors cursor-pointer"
+          title="User Profile & Sync"
+        >
+          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
+            M
+          </div>
+        </button>
       </div>
     </header>
   );

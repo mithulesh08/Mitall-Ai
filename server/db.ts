@@ -12,6 +12,17 @@ import {
   ToolInvocation,
 } from '../src/types/index';
 
+export interface UserRecord {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  avatar?: string;
+  role: 'user' | 'admin';
+  createdAt: string;
+  lastLogin: string;
+}
+
 interface DatabaseSchema {
   settings: UserSettings;
   conversations: Conversation[];
@@ -22,6 +33,7 @@ interface DatabaseSchema {
   tasks: TaskItem[];
   notes: PersonalNote[];
   toolLogs: Array<ToolInvocation & { id: string }>;
+  users: UserRecord[];
 }
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
@@ -35,7 +47,7 @@ const defaultSettings: UserSettings = {
   temperature: 0.7,
   maxTokens: 4096,
   activeProvider: 'gemini',
-  geminiModel: 'gemini-3.8-flash',
+  geminiModel: 'gemini-4-hydrogen',
   geminiApiKey: '',
   ollamaEndpoint: 'http://127.0.0.1:11434',
   ollamaModel: 'llama3.2',
@@ -171,6 +183,19 @@ MITALL operates through a modular AI orchestration pipeline:
   },
 ];
 
+const defaultUsers: UserRecord[] = [
+  {
+    id: 'user-default',
+    name: 'Mithulesh Ganesan',
+    email: 'mithuleshganesan08@gmail.com',
+    passwordHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', // default admin hash
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    role: 'admin',
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+  },
+];
+
 class Database {
   private data: DatabaseSchema;
 
@@ -190,8 +215,17 @@ class Database {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         const parsed = JSON.parse(raw);
+        const loadedSettings = { ...defaultSettings, ...(parsed.settings || {}) };
+        if (
+          !loadedSettings.geminiModel ||
+          loadedSettings.geminiModel === 'gemini-3.8-flash' ||
+          loadedSettings.geminiModel.startsWith('gemini-2.') ||
+          loadedSettings.geminiModel.startsWith('gemini-1.')
+        ) {
+          loadedSettings.geminiModel = 'gemini-4-hydrogen';
+        }
         return {
-          settings: { ...defaultSettings, ...(parsed.settings || {}) },
+          settings: loadedSettings,
           conversations: parsed.conversations || defaultConversations,
           messages: parsed.messages || defaultMessages,
           memories: parsed.memories || defaultMemories,
@@ -200,6 +234,7 @@ class Database {
           tasks: parsed.tasks || defaultTasks,
           notes: parsed.notes || defaultNotes,
           toolLogs: parsed.toolLogs || [],
+          users: parsed.users && parsed.users.length > 0 ? parsed.users : defaultUsers,
         };
       }
     } catch (err) {
@@ -216,6 +251,7 @@ class Database {
       tasks: defaultTasks,
       notes: defaultNotes,
       toolLogs: [],
+      users: defaultUsers,
     };
     this.saveData(initial);
     return initial;
@@ -526,6 +562,53 @@ class Database {
     return this.data.toolLogs;
   }
 
+  // User Authentication & Profile
+  getUsers(): UserRecord[] {
+    return this.data.users || [];
+  }
+
+  getUserByEmail(email: string): UserRecord | undefined {
+    return (this.data.users || []).find((u) => u.email.toLowerCase() === email.toLowerCase().trim());
+  }
+
+  getUserById(id: string): UserRecord | undefined {
+    return (this.data.users || []).find((u) => u.id === id);
+  }
+
+  createUser(name: string, email: string, passwordHash: string): UserRecord {
+    if (!this.data.users) this.data.users = [];
+    const newUser: UserRecord = {
+      id: `user-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      passwordHash,
+      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`,
+      role: 'user',
+      createdAt: new Date().toISOString(),
+      lastLogin: new Date().toISOString(),
+    };
+    this.data.users.push(newUser);
+    this.persist();
+    return newUser;
+  }
+
+  updateUserLastLogin(id: string): void {
+    const user = this.getUserById(id);
+    if (user) {
+      user.lastLogin = new Date().toISOString();
+      this.persist();
+    }
+  }
+
+  updateUserProfile(id: string, updates: Partial<UserRecord>): UserRecord | null {
+    const user = this.getUserById(id);
+    if (!user) return null;
+    if (updates.name) user.name = updates.name.trim();
+    if (updates.avatar) user.avatar = updates.avatar;
+    this.persist();
+    return user;
+  }
+
   // Export & Clear
   exportAll() {
     return {
@@ -546,6 +629,7 @@ class Database {
       tasks: defaultTasks,
       notes: defaultNotes,
       toolLogs: [],
+      users: defaultUsers,
     };
     this.persist();
     return true;

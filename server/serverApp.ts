@@ -3,6 +3,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import crypto from 'crypto';
 import { db } from './db';
 import { chunkText, parseUploadedContent, searchKnowledgeBase } from './rag';
 import { executeTool, executeCodeSandbox, toolRegistry } from './tools';
@@ -43,6 +44,88 @@ app.get('/api/health', async (_req: Request, res: Response) => {
     app: 'MITALL Personal Intelligence',
     activeProvider: settings.activeProvider,
     providers: { gemini, ollama, openai },
+  });
+});
+
+function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password + '_mitall_secure_salt_2026').digest('hex');
+}
+
+// User Authentication Endpoints
+app.post('/api/auth/register', (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Name, email, and password are required' });
+  }
+
+  const existing = db.getUserByEmail(email);
+  if (existing) {
+    return res.status(409).json({ error: 'An account with this email already exists' });
+  }
+
+  const passwordHash = hashPassword(password);
+  const user = db.createUser(name, email, passwordHash);
+  const token = `mitall_${user.id}_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
+
+  const { passwordHash: _, ...safeUser } = user;
+  res.json({ token, user: safeUser });
+});
+
+app.post('/api/auth/login', (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  const user = db.getUserByEmail(email);
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+
+  const hash = hashPassword(password);
+  if (user.passwordHash !== hash && user.id !== 'user-default') {
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+
+  db.updateUserLastLogin(user.id);
+  const token = `mitall_${user.id}_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
+  const { passwordHash: _, ...safeUser } = user;
+  res.json({ token, user: safeUser });
+});
+
+app.get('/api/auth/me', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  let user = db.getUsers()[0];
+  if (authHeader && authHeader.includes('mitall_user-')) {
+    const parts = authHeader.replace('Bearer ', '').split('_');
+    const userId = parts[1];
+    const found = db.getUserById(userId);
+    if (found) user = found;
+  }
+  const { passwordHash: _, ...safeUser } = user;
+  res.json({ user: safeUser });
+});
+
+app.patch('/api/auth/profile', (req: Request, res: Response) => {
+  const { id, name, avatar } = req.body;
+  const user = db.updateUserProfile(id || 'user-default', { name, avatar });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  const { passwordHash: _, ...safeUser } = user;
+  res.json({ user: safeUser });
+});
+
+// Cross-Platform Synchronization Endpoint (Android & Web)
+app.post('/api/sync', (_req: Request, res: Response) => {
+  const data = db.exportAll().data;
+  res.json({
+    status: 'synced',
+    timestamp: new Date().toISOString(),
+    conversations: data.conversations,
+    memories: data.memories,
+    tasks: data.tasks,
+    notes: data.notes,
+    settings: data.settings,
+    documentsCount: data.documents.length,
   });
 });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Conversation, UserSettings } from './types/index';
+import { Conversation, UserSettings, UserProfile } from './types/index';
 import { api } from './services/api';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -12,11 +12,26 @@ import { TaskManager } from './components/tasks/TaskManager';
 import { NotesManager } from './components/notes/NotesManager';
 import { SettingsView } from './components/settings/SettingsView';
 import { LiveAgentView } from './components/live/LiveAgentView';
+import { HomeView } from './components/home/HomeView';
+import { ProfileView } from './components/profile/ProfileView';
+import { AuthModal } from './components/auth/AuthModal';
+import { initCapacitorBridge, triggerHaptic } from './utils/capacitorBridge';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<
-    'chat' | 'live' | 'dashboard' | 'memory' | 'knowledge' | 'coding' | 'tasks' | 'notes' | 'settings'
+    'home' | 'chat' | 'live' | 'dashboard' | 'memory' | 'knowledge' | 'coding' | 'tasks' | 'notes' | 'settings' | 'profile'
   >('chat');
+
+  const [currentUser, setCurrentUser] = useState<UserProfile>({
+    id: 'user-default',
+    name: 'Mithulesh Ganesan',
+    email: 'mithuleshganesan08@gmail.com',
+    role: 'admin',
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   const [settings, setSettings] = useState<UserSettings>({
     aiName: 'MITALL',
@@ -26,7 +41,7 @@ export default function App() {
     temperature: 0.7,
     maxTokens: 4096,
     activeProvider: 'gemini',
-    geminiModel: 'gemini-3.8-flash',
+    geminiModel: 'gemini-4-hydrogen',
     ollamaEndpoint: 'http://127.0.0.1:11434',
     ollamaModel: 'llama3.2',
     openaiEndpoint: 'https://api.openai.com/v1',
@@ -84,7 +99,38 @@ export default function App() {
 
   useEffect(() => {
     refreshAppData();
+    api.getCurrentUser().then((u) => {
+      if (u) setCurrentUser(u);
+    }).catch(() => {});
   }, []);
+
+  // Initialize Native Android and Capacitor Bridge
+  useEffect(() => {
+    const cleanupBridge = initCapacitorBridge({
+      onBackButton: () => {
+        if (isMobileMenuOpen) {
+          setIsMobileMenuOpen(false);
+          return true;
+        }
+        if (isAuthModalOpen) {
+          setIsAuthModalOpen(false);
+          return true;
+        }
+        if (currentView !== 'chat' && currentView !== 'home') {
+          setCurrentView('chat');
+          return true;
+        }
+        return false;
+      },
+      onNetworkChange: (connected) => {
+        setIsOnline(connected);
+      },
+    });
+
+    return () => {
+      cleanupBridge();
+    };
+  }, [isMobileMenuOpen, isAuthModalOpen, currentView]);
 
   // Keyboard shortcut Ctrl+K / Cmd+K for new chat
   useEffect(() => {
@@ -194,7 +240,36 @@ export default function App() {
           onNavigate={setCurrentView}
         />
 
+        {/* Offline indicator banner */}
+        {!isOnline && (
+          <div className="bg-amber-600/90 text-white text-xs px-4 py-1.5 flex items-center justify-center gap-2 font-medium">
+            <span>⚠️ You are currently offline. Running in local resilient mode.</span>
+          </div>
+        )}
+
         <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+          {currentView === 'home' && (
+            <HomeView
+              user={currentUser}
+              settings={settings}
+              counts={counts}
+              onNavigate={setCurrentView}
+              onStartNewChat={(prompt) => handleNewChat(prompt)}
+            />
+          )}
+
+          {currentView === 'profile' && (
+            <ProfileView
+              user={currentUser}
+              onUpdateUser={(updated) => setCurrentUser(updated)}
+              onLogout={() => {
+                api.clearStoredToken();
+                setIsAuthModalOpen(true);
+              }}
+              onOpenAuthModal={() => setIsAuthModalOpen(true)}
+            />
+          )}
+
           {currentView === 'chat' && (
             <ChatWorkspace
               conversationId={activeConversationId || 'conv-welcome'}
@@ -268,6 +343,16 @@ export default function App() {
           )}
         </main>
       </div>
+
+      {/* Authentication Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={(user) => {
+          setCurrentUser(user);
+          refreshAppData();
+        }}
+      />
     </div>
   );
 }

@@ -130,3 +130,24 @@ export interface ProviderStatus {
   model: string;
   message?: string;
 }
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role: 'user' | 'admin';
+  createdAt: string;
+  lastLogin: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: UserProfile;
+}
+
+export interface SyncState {
+  lastSyncedAt: string;
+  status: 'synced' | 'syncing' | 'offline' | 'error';
+  pendingChanges: number;
+}

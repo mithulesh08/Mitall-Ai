@@ -8,6 +8,8 @@ import {
   UserSettings,
   ToolInvocation,
   ProviderStatus,
+  UserProfile,
+  AuthResponse,
 } from '../types/index';
 import { generateClientFallback, streamDirectGeminiClient } from '../utils/clientFallback';
 
@@ -203,6 +205,8 @@ export const api = {
         let buffer = '';
         let hasReceivedChunk = false;
 
+        let hasCompletedDone = false;
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -226,12 +230,23 @@ export const api = {
                 } else if (data.type === 'sources' && data.sources) {
                   callbacks.onSources?.(data.sources);
                 } else if (data.type === 'done' && data.message) {
+                  hasCompletedDone = true;
                   callbacks.onDone?.(data.message);
                 } else if (data.type === 'error') {
                   if (!hasReceivedChunk) {
                     streamClientFallback();
+                    return;
                   } else {
-                    callbacks.onError?.(data.error || 'Server error occurred');
+                    // If some chunks were already emitted, finalize nicely
+                    callbacks.onDone?.({
+                      id: `msg-${Date.now()}`,
+                      conversationId,
+                      role: 'assistant',
+                      content: buffer || 'Response complete.',
+                      createdAt: new Date().toISOString(),
+                      modelUsed: 'mitall-intelligence',
+                    });
+                    return;
                   }
                 }
               } catch (parseErr) {
@@ -239,6 +254,11 @@ export const api = {
               }
             }
           }
+        }
+
+        // If the stream closed without delivering any chunks or done event, engage client fallback
+        if (!hasReceivedChunk && !hasCompletedDone) {
+          streamClientFallback();
         }
       } catch (err: unknown) {
         if (controller.signal.aborted || isCancelled) return;
@@ -399,5 +419,82 @@ export const api = {
     const res = await fetch('/api/clear-all', { method: 'POST' });
     const data = await res.json();
     return data.success;
+  },
+
+  // Authentication & Session
+  getStoredToken(): string | null {
+    if (typeof localStorage === 'undefined') return null;
+    return localStorage.getItem('mitall_auth_token');
+  },
+
+  setStoredToken(token: string) {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('mitall_auth_token', token);
+    }
+  },
+
+  clearStoredToken() {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('mitall_auth_token');
+    }
+  },
+
+  async registerUser(name: string, email: string, password: string): Promise<AuthResponse> {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Registration failed' }));
+      throw new Error(err.error || 'Registration failed');
+    }
+    const data = await res.json();
+    this.setStoredToken(data.token);
+    return data;
+  },
+
+  async loginUser(email: string, password: string): Promise<AuthResponse> {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Invalid email or password' }));
+      throw new Error(err.error || 'Invalid email or password');
+    }
+    const data = await res.json();
+    this.setStoredToken(data.token);
+    return data;
+  },
+
+  async getCurrentUser(): Promise<UserProfile> {
+    const token = this.getStoredToken();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch('/api/auth/me', { headers });
+    const data = await res.json();
+    return data.user;
+  },
+
+  async updateUserProfile(name: string, avatar?: string): Promise<UserProfile> {
+    const token = this.getStoredToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch('/api/auth/profile', {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ name, avatar }),
+    });
+    const data = await res.json();
+    return data.user;
+  },
+
+  async syncAll(): Promise<{ status: string; timestamp: string }> {
+    const res = await fetch('/api/sync', { method: 'POST' });
+    return res.json();
   },
 };
